@@ -1,9 +1,36 @@
 <script lang="ts">
-	import { Settings, Home } from 'lucide-svelte'
+	import {
+		Settings,
+		Home,
+		Map,
+		AlignJustify,
+	} from 'lucide-svelte'
 	import type { LayoutData } from '../../../routes/$types'
+	import type { ComponentType } from 'svelte'
+	import type { Icon } from 'lucide-svelte'
+	import NavButton from './NavButton.svelte'
+
 	export let data: LayoutData
 	let { supabase } = data
 	$: ({ supabase } = data)
+
+	let itens: {
+		label: string
+		href: string
+		icon: ComponentType<Icon>
+	}[] = [
+		{
+			label: 'Início',
+			href: '/',
+			icon: AlignJustify,
+		},
+		{
+			label: 'Home Page',
+			href: 'https://crossvirus.com.br',
+			icon: Home,
+		},
+		{ label: 'Mapas', href: '/maps', icon: Map },
+	]
 
 	const user = data.session?.user
 
@@ -22,28 +49,35 @@
 	class="flex max-md:flex-col gap-2 justify-between p-2 m-2 bg-white rounded"
 >
 	<div class="flex max-md:flex-col gap-2">
-		<a href="/" class="hover:bg-slate-400 rounded-full">
-			<Home />
-		</a>
-		<p class="bg-slate-600 text-white px-1 rounded">
-			Central Crossvirus {municipio?.nome}
-		</p>
-		<a
-			class=" hover:bg-primary border border-primary rounded p-1 px-3"
-			href="https://crossvirus.com.br">Home Page</a
-		>
+		{#if itens.length > 0}
+			<NavButton
+				href={itens[0].href}
+				label={itens[0].label}
+				Icon={itens[0].icon}
+			/>
+		{/if}
 
-		<a class=" hover:bg-slate-100 bg-slate-400 rounded px-1" href="/maps"
-			>Mapas</a
-		>
+		<p class="p-2 px-4 rounded self-center bg-gray-50">
+			Central Crossvirus de <span
+				class="text-secondary font-bold"
+				>{municipio?.nome}</span
+			>
+		</p>
+
+		{#each itens.slice(1) as item}
+			<NavButton
+				href={item.href}
+				label={item.label}
+				Icon={item.icon}
+			/>
+		{/each}
 	</div>
 
 	<div>
-		<button
-			class="flex gap-1 hover:underline hover:bg-slate-100 bg-slate-400 rounded px-1"
+		<NavButton
 			on:click={signOut}
-			>{user?.email}
-			<Settings />
-		</button>
+			label={user?.email}
+			Icon={Settings}
+		/>
 	</div>
 </nav>
