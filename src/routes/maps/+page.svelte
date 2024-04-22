@@ -1,0 +1,37 @@
+<script lang="ts">
+	import { MapPinned, FolderPlus } from 'lucide-svelte'
+	import type { PageData } from './$types'
+
+	export let data: PageData
+
+	const maps = data.maps
+</script>
+
+<main class="flex flex-col justify-center items-center">
+	<div class="grid gap-3 grid-cols-2 max-md:grid-cols-1">
+		{#each maps as mapa}
+			<div class="flex justify-between p-1 rounded bg-slate-300 w-full">
+				{mapa.title}
+				<div class="ml-1 flex gap-1">
+					<a
+						href="maps"
+						title="Adicionar dados ao mapa"
+						class="hover:bg-slate-400 rounded-full"
+					>
+						<FolderPlus />
+					</a>
+					<a
+						href="maps/{mapa.id}"
+						title="Visualizar o mapa"
+						class="hover:bg-slate-400 rounded-full"
+					>
+						<MapPinned /></a
+					>
+				</div>
+			</div>
+		{/each}
+	</div>
+	<a href="/maps/create" class="p-2 my-4 rounded bg-blue-400 hover:bg-blue-300">
+		Crie um novo mapa a partir de dados CSV
+	</a>
+</main>
