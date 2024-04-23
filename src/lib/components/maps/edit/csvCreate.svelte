@@ -142,7 +142,7 @@
 						name="ano"
 						id="ano"
 						bind:value={ano}
-						class="border-2 border-green-300"
+						class="border-2 rounded border-green-300"
 					>
 						<option value="2024"> 2024 </option>
 						<option value="2023">2023</option>
@@ -159,7 +159,7 @@
 						name="doenca"
 						id="doenca"
 						bind:value={doenca}
-						class="border-2 border-green-300"
+						class="border-2 rounded border-green-300"
 					>
 						{#each list_doencas as d}
 							<option value={d}>{d}</option>

@@ -76,7 +76,7 @@
 
 	<div class="flex gap-2">
 		<NavButton
-			on:click={signOut}
+			href='/editprofile'
 			label='Editar perfil'
 			Icon={Settings}
 		/>
