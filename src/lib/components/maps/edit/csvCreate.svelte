@@ -65,7 +65,7 @@
 
 		try {
 			const response = await fetch(
-				'/autenticado/createMap',
+				'/maps/create',
 				{
 					method: 'POST',
 					body: formData,

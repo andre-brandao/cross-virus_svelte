@@ -90,7 +90,7 @@
 
 		try {
 			const response = await fetch(
-				`/autenticado/updateMap/${map.id}`,
+				`/api/maps/update/${map.id}`,
 				{
 					method: 'POST',
 					body: formData,
@@ -162,7 +162,7 @@
 			</div>
 			<form
 				method="post"
-				on:submit|preventDefault={onFormSubmit}
+				
 				class="rounded sticky top-10 flex p-5 my-2 border shadow-lg bg-white gap-2 justify-between {!true
 					? 'border-green-300'
 					: 'border-secondary'}"
@@ -178,7 +178,8 @@
 				/>
 
 				<button
-					type="submit"
+				type="button"
+					on:click={onFormSubmit}
 					class="bg-primary disabled:bg-secondary items-center text-center rounded-md p-2 transition ease-in-out disabled:text-white text-black hover:disabled:bg-opacity-80 hover:opacity-80 w-96"
 					disabled={!isValidCSV && !isCarregando}
 					>Geocodificar</button

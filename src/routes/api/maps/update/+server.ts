@@ -15,7 +15,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const formData = await request.formData()
 	const file = formData.get('csv')
-	const mapID = formData.get('mapID')
+	const mapID = formData.get('map_id')
 
 	if (!file || !(file instanceof File) || typeof mapID !== 'string') {
 		return new Response('Dados inválidos', { status: 404 })
