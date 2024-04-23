@@ -1,4 +1,5 @@
 <script lang="ts">
+	import Button from '$lib/components/Button.svelte'
 	import { MapPinned, FolderPlus } from 'lucide-svelte'
 	import type { PageData } from './$types'
 
@@ -33,10 +34,10 @@
 			</div>
 		{/each}
 	</div>
-	<a
-		href="/maps/create"
-		class="p-2 my-4 rounded bg-blue-400 hover:bg-blue-300"
-	>
-		Crie um novo mapa a partir de dados CSV
-	</a>
+	<div class="my-4">
+		<Button
+			href="/maps/create"
+			label="Crie um novo mapa a partir de dados CSV"
+		/>
+	</div>
 </main>
