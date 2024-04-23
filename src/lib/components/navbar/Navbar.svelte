@@ -4,6 +4,7 @@
 		Home,
 		Map,
 		AlignJustify,
+		LogOut,
 	} from 'lucide-svelte'
 	import type { LayoutData } from '../../../routes/$types'
 	import type { ComponentType } from 'svelte'
@@ -57,7 +58,7 @@
 			/>
 		{/if}
 
-		<p class="p-2 px-4 rounded self-center bg-gray-50">
+		<p class="p-2 px-4 rounded self-center bg-gray-200">
 			Central Crossvirus de <span
 				class="text-secondary font-bold"
 				>{municipio?.nome}</span
@@ -73,11 +74,16 @@
 		{/each}
 	</div>
 
-	<div>
+	<div class="flex gap-2">
+		<NavButton
+			on:click={signOut}
+			label='Editar perfil'
+			Icon={Settings}
+		/>
 		<NavButton
 			on:click={signOut}
 			label={user?.email}
-			Icon={Settings}
+			Icon={LogOut}
 		/>
 	</div>
 </nav>
