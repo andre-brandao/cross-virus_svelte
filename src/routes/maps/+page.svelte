@@ -8,11 +8,13 @@
 	const maps = data.maps
 </script>
 
-<main class="flex flex-col justify-center items-center">
+<main
+	class="flex flex-col justify-center items-center bg-gray-100 md:h-[90vh]"
+>
 	<div class="grid gap-3 grid-cols-2 max-md:grid-cols-1">
 		{#each maps as mapa}
 			<div
-				class="flex justify-between p-2 px-5 rounded bg-gray-200 w-full items-center"
+				class="flex justify-between p-2 px-5 rounded bg-white w-full items-center"
 			>
 				{mapa.title}
 				<div class="ml-1 flex gap-2">

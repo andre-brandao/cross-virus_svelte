@@ -52,7 +52,9 @@
 		isUploading = true
 		if (!file || !campo_endereco || !nome_dataset) {
 			isUploading = false
-			console.log('Arquivo ou campo de endereço não fornecido')
+			console.log(
+				'Arquivo ou campo de endereço não fornecido',
+			)
 			return
 		}
 
@@ -62,10 +64,13 @@
 		formData.append('fileName', nome_dataset + '.csv')
 
 		try {
-			const response = await fetch('/autenticado/createMap', {
-				method: 'POST',
-				body: formData,
-			})
+			const response = await fetch(
+				'/autenticado/createMap',
+				{
+					method: 'POST',
+					body: formData,
+				},
+			)
 
 			if (response.ok) {
 				console.log('Resultado da Geocodificação:', result)
@@ -114,10 +119,14 @@
 		</div>
 	</main>
 {:else}
-	<main class="flex items-center justify-center">
-		<div class="p-4">
-			<div class="flex justify-between">
-				<h1 class="text-2xl font-bold">Criando Dataset CSV</h1>
+	<main
+		class="flex items-center justify-center bg-gray-100 md:h-[43vh]"
+	>
+		<div class="">
+			<div class="flex justify-between p-5">
+				<h1 class="text-2xl font-bold">
+					Criando Dataset CSV
+				</h1>
 				<h1 class="text-2xl font-bold">
 					{nome_dataset}
 				</h1>
@@ -125,7 +134,7 @@
 			<form
 				method="post"
 				on:submit|preventDefault={onFormSubmit}
-				class="rounded sticky top-10 flex flex-col p-2 m-2 border shadow-lg bg-gray-100 {isformValid
+				class="rounded sticky top-10 flex flex-col p-5 m-2 border shadow-lg bg-white {isformValid
 					? 'border-green-300'
 					: 'border-secondary'}"
 			>
@@ -135,14 +144,16 @@
 						name="csv"
 						type="file"
 						on:change={onFileChange}
-						class="border {!file ? 'bg-red-300' : 'border-green-300'}"
+						class="rounded py-1 px-3 text-white file:bg-transparent file:rounded file:border-0 file:text-white file:px-3 {!file
+							? 'bg-secondary'
+							: 'border-green-300 bg-green-500'}"
 					/>
 					<label for="ano"> Ano: </label>
 					<select
 						name="ano"
 						id="ano"
 						bind:value={ano}
-						class="border-2 rounded border-green-300"
+						class="border-2 rounded py-1 px-3"
 					>
 						<option value="2024"> 2024 </option>
 						<option value="2023">2023</option>
@@ -159,7 +170,7 @@
 						name="doenca"
 						id="doenca"
 						bind:value={doenca}
-						class="border-2 rounded border-green-300"
+						class="border-2 rounded py-1 px-3"
 					>
 						{#each list_doencas as d}
 							<option value={d}>{d}</option>
@@ -179,13 +190,14 @@
               readonly
             /> -->
 				<div
-					class="border p-2 m-2 {!campo_endereco
+					class="border p-2 my-4 rounded {!campo_endereco
 						? 'border-secondary'
 						: ' border-green-400'}"
 				>
 					{#if parsedData.length > 0}
 						<label for="field">Campo Endereço</label>
 						<select
+							class="rounded py-1 px-3 text-black"
 							name="field"
 							id="field"
 							bind:value={campo_endereco}
@@ -196,13 +208,15 @@
 							{/each}
 						</select>
 					{:else}
-						<p>Carregue um arquivo para selecionar o campo de endereço</p>
+						<p class="p-0 m-0">
+							Carregue um arquivo para selecionar o campo de
+							endereço
+						</p>
 					{/if}
 				</div>
-
 				<button
 					type="submit"
-					class="bg-green-300 p-1 rounded w-full disabled:bg-secondary disabled:opacity-70"
+					class="bg-primary w-full disabled:bg-secondary items-center text-center rounded-md p-2 transition ease-in-out disabled:text-white text-black hover:disabled:bg-opacity-80 hover:opacity-80"
 					disabled={!isformValid}>Geocodificar</button
 				>
 			</form>
@@ -243,14 +257,17 @@
 {/if}
 
 {#if parsedData.length > 0}
-	<div class="w-screen overflow-scroll h-[50vh] overflow-y-scroll">
+	<div
+		class="w-screen overflow-scroll h-[45vh] overflow-y-scroll"
+	>
 		<table class="w-full text-left table-auto">
 			<thead class="bg-gray-200 sticky top-0">
 				<tr>
 					{#each Object.keys(parsedData[0]) as header}
 						<th
-							class="px-4 py-2 border hover:bg-blue-300 cursor-pointer"
-							on:click={() => (campo_endereco = header)}>{header}</th
+							class="px-4 py-2 border hover:bg-primary cursor-pointer"
+							on:click={() => (campo_endereco = header)}
+							>{header}</th
 						>
 					{/each}
 				</tr>
@@ -266,7 +283,7 @@
 			</tbody>
 		</table>
 	</div>
-	<p class="text-center font-bold">
+	<p class="text-center font-bold bg-gray-100">
 		Também é possivel clicar no campo do endereço
 	</p>
 {/if}
