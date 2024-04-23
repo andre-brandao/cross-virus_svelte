@@ -1,5 +1,5 @@
 <script>
-    //@ts-nocheck
+	//@ts-nocheck
 	export let map = {
 		CodMun: 4311343,
 		created_at: 'string',
@@ -78,7 +78,9 @@
 		isUploading = true
 		if (!file) {
 			isUploading = false
-			console.log('Arquivo ou campo de endereço não fornecido')
+			console.log(
+				'Arquivo ou campo de endereço não fornecido',
+			)
 			return
 		}
 
@@ -87,16 +89,22 @@
 		formData.append('map_id', map.id)
 
 		try {
-			const response = await fetch(`/autenticado/updateMap/${map.id}`, {
-				method: 'POST',
-				body: formData,
-			})
+			const response = await fetch(
+				`/autenticado/updateMap/${map.id}`,
+				{
+					method: 'POST',
+					body: formData,
+				},
+			)
 
 			if (response.ok) {
 				const result = await response.json()
 				console.log('Resultado da Geocodificação:', result)
 			} else {
-				console.error('Erro ao enviar arquivo:', await response.text())
+				console.error(
+					'Erro ao enviar arquivo:',
+					await response.text(),
+				)
 			}
 			isUploading = false
 		} catch (e) {
@@ -140,10 +148,14 @@
 		</div>
 	</main>
 {:else}
-	<main class="flex items-center justify-center">
-		<div class="p-4">
-			<div class="flex justify-between">
-				<h1 class="text-2xl font-bold">Update Dataset CSV</h1>
+	<main
+		class="flex items-center justify-center bg-gray-100 md:h-[90vh]"
+	>
+		<div class="">
+			<div class="flex justify-between p-5">
+				<h1 class="text-2xl font-bold">
+					Update Dataset CSV
+				</h1>
 				<h1 class="text-2xl font-bold">
 					{nome_dataset}
 				</h1>
@@ -151,7 +163,7 @@
 			<form
 				method="post"
 				on:submit|preventDefault={onFormSubmit}
-				class="rounded sticky top-10 flex flex-col p-2 m-2 border shadow-lg bg-gray-100 {!true
+				class="rounded sticky top-10 flex p-5 my-2 border shadow-lg bg-white gap-2 justify-between {!true
 					? 'border-green-300'
 					: 'border-secondary'}"
 			>
@@ -160,18 +172,21 @@
 					name="csv"
 					type="file"
 					on:change={onFileChange}
-					class="border {!file ? 'bg-red-300' : 'border-green-300'}"
+					class="rounded py-2 px-3 text-white file:bg-transparent file:rounded file:border-0 file:text-white items-center self-center w-full {!file
+						? 'bg-secondary'
+						: 'border-green-300 bg-green-500'}"
 				/>
 
 				<button
 					type="submit"
-					class="bg-green-300 p-1 rounded w-full disabled:bg-secondary disabled:opacity-70"
-					disabled={!isValidCSV && !isCarregando}>Geocodificar</button
+					class="bg-primary disabled:bg-secondary items-center text-center rounded-md p-2 transition ease-in-out disabled:text-white text-black hover:disabled:bg-opacity-80 hover:opacity-80 w-96"
+					disabled={!isValidCSV && !isCarregando}
+					>Geocodificar</button
 				>
 			</form>
-			<div>
+			<div class="mb-3">
 				** O novo arquivo deve ter o formato
-				<code class="bg-blue-200">
+				<code class="bg-primary p-1 rounded">
 					{#each map.fields as item}
 						<span>
 							{item},
@@ -180,15 +195,14 @@
 				</code>
 			</div>
 
-			{#if erros}
-				<code class="bg-red-300">
-					O CSV não possui o campo: {erros}
-				</code>
-			{/if}
-
-			<div>
+			<div class="mb-3">
 				** Campo endereco: {map.endereco}
 			</div>
+			{#if erros}
+				<code class="bg-secondary text-white p-1 rounded">
+					ERRO: O CSV não possui o campo: {erros}
+				</code>
+			{/if}
 		</div>
 	</main>
 {/if}
@@ -226,14 +240,17 @@
 {/if}
 
 {#if parsedData.length > 0}
-	<div class="w-screen overflow-scroll h-[50vh] overflow-y-scroll">
+	<div
+		class="w-screen overflow-scroll h-[50vh] overflow-y-scroll"
+	>
 		<table class="w-full text-left table-auto">
 			<thead class="bg-gray-200 sticky top-0">
 				<tr>
 					{#each Object.keys(parsedData[0]) as header}
 						<th
 							class="px-4 py-2 border hover:bg-blue-300 cursor-pointer"
-							on:click={() => (campo_endereco = header)}>{header}</th
+							on:click={() => (campo_endereco = header)}
+							>{header}</th
 						>
 					{/each}
 				</tr>
