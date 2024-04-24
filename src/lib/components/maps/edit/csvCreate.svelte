@@ -48,7 +48,9 @@
 	}
 
 	let isUploading = false
-	async function onFormSubmit() {
+
+	let erros = ''
+	async function subbmitForm() {
 		isUploading = true
 		if (!file || !campo_endereco || !nome_dataset) {
 			isUploading = false
@@ -60,22 +62,21 @@
 
 		const formData = new FormData()
 		formData.append('csv', file)
-		formData.append('field', campo_endereco)
-		formData.append('fileName', nome_dataset + '.csv')
+		formData.append('campo_end', campo_endereco)
+		formData.append('ano', ano)
+		formData.append('doenca', doenca)
+
 
 		try {
-			const response = await fetch(
-				'/maps/create',
-				{
-					method: 'POST',
-					body: formData,
-				},
-			)
+			const response = await fetch('/api/maps/create', {
+				method: 'POST',
+				body: formData,
+			})
 
 			if (response.ok) {
 				console.log('Resultado da Geocodificação:', result)
 			} else {
-				console.error('Erro ao enviar arquivo:')
+				console.error(response)
 			}
 			isUploading = false
 		} catch (e) {
@@ -132,8 +133,6 @@
 				</h1>
 			</div>
 			<form
-				method="post"
-				on:submit|preventDefault={onFormSubmit}
 				class="rounded sticky top-10 flex flex-col p-5 m-2 border shadow-lg bg-white {isformValid
 					? 'border-green-300'
 					: 'border-secondary'}"
@@ -175,7 +174,6 @@
 						{#each list_doencas as d}
 							<option value={d}>{d}</option>
 						{/each}
-						<option value="2024"> 2024 </option>
 					</select>
 				</div>
 
@@ -215,7 +213,7 @@
 					{/if}
 				</div>
 				<button
-					type="submit"
+					on:click={subbmitForm}
 					class="bg-primary w-full disabled:bg-secondary items-center text-center rounded-md p-2 transition ease-in-out disabled:text-white text-black hover:disabled:bg-opacity-80 hover:opacity-80"
 					disabled={!isformValid}>Geocodificar</button
 				>

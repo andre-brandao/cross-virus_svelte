@@ -1,9 +1,16 @@
-import { geocodeAddress, getDistanceFromLatLonInKm, sendEmail } from '$lib/utils'
+import {
+	geocodeAddress,
+	getDistanceFromLatLonInKm,
+	sendEmail,
+} from '$lib/utils'
 import type { RequestHandler } from './$types'
 import { parse } from 'csv-parse/sync'
 import { stringify } from 'csv-stringify/sync'
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({
+	request,
+	locals,
+}) => {
 	const supabase = locals.supabase
 
 	const {
@@ -12,13 +19,16 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const CodMun = session?.user?.user_metadata.municipio
 
-	const { data: municipio, error: error_municipio } = await supabase
-		.from('municipios')
-		.select('*')
-		.eq('CodMun', CodMun)
-		.single()
+	const { data: municipio, error: error_municipio } =
+		await supabase
+			.from('municipios')
+			.select('*')
+			.eq('CodMun', CodMun)
+			.single()
 
 	if (error_municipio) {
+		console.error(error_municipio)
+
 		return new Response(
 			'Erro ao obter seu municipio, contacte suporte crossvirus!',
 			{ status: 404 },
@@ -27,24 +37,29 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	console.log('form')
 	const form = await request.formData()
+	const csv = form.get('csv')
+	const campo_end = form.get('campo_end')
+	const ano = form.get('ano')
+	const doenca = form.get('doenca')
 	console.log(form)
-	const csv = await form.get('csv')
-	const campo_end = await form.get('campo_end')
-	const ano = await form.get('ano')
-	const doenca = await form.get('doenca')
 
 	const fileName = `${municipio.nome}_${doenca}_${ano}.csv`
 
 	if (
-		!csv ||
 		!(csv instanceof File) ||
 		typeof campo_end !== 'string' ||
 		typeof ano !== 'string' ||
 		typeof doenca !== 'string'
 	) {
-		return new Response('Dados inválidos, por favor preencha todos os campos', {
-			status: 404,
-		})
+		console.error(
+			'Dados inválidos, por favor preencha todos os campos',
+		)
+		return new Response(
+			'Dados inválidos, por favor preencha todos os campos',
+			{
+				status: 404,
+			},
+		)
 	}
 
 	const csvContent = await csv.text()
@@ -55,12 +70,20 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const headers = Object.keys(records[0])
 
 	if (!headers.includes(campo_end)) {
-		return new Response('Campo de endereço não encontrado no arquivo', {
-			status: 404,
-		})
+		console.error(
+			'Campo de endereço não encontrado no arquivo',
+		)
+		return new Response(
+			'Campo de endereço não encontrado no arquivo',
+			{
+				status: 404,
+			},
+		)
 	}
 
 	// Geocodifica cada endereço e armazena o resultado
+	console.log('Iniciando geocodificacao')
+
 	for (const record of records) {
 		const address = record[campo_end]
 		if (address) {
@@ -72,7 +95,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				record['longitude'] = location?.lng ?? null
 			} catch (e) {
 				console.error(e)
-				console.warn(`Erro ao geocodificar o endereço: ${address}`)
+				console.warn(
+					`Erro ao geocodificar o endereço: ${address}`,
+				)
 			}
 		}
 	}
@@ -108,15 +133,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					},
 				)
 				for (const user of users_to_notify) {
-					if (user.raio_alerta && distance <= user.raio_alerta) {
+					if (
+						user.raio_alerta &&
+						distance <= user.raio_alerta
+					) {
 						if (!user_to_notify_map[user.email]) {
 							user_to_notify_map[user.email] = {
 								enderecos_novos: [],
 							}
 						}
-						user_to_notify_map[user.email].enderecos_novos.push(
-							record1[campo_end],
-						)
+						user_to_notify_map[
+							user.email
+						].enderecos_novos.push(record1[campo_end])
 					}
 				}
 			}
@@ -137,14 +165,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 		console.log('Emails enviados com sucesso!')
 	}
 
-
 	const updatedCsvContent = stringify(records, {
 		header: true,
 		columns: Object.keys(records[0]),
 	})
-	const { data: storage_data, error: error_csv } = await supabase.storage
-		.from('csv_maps')
-		.upload(`${municipio.CodMun}/${fileName}`, updatedCsvContent)
+	const { data: storage_data, error: error_csv } =
+		await supabase.storage
+			.from('csv_maps')
+			.upload(
+				`${municipio.CodMun}/${fileName}`,
+				updatedCsvContent,
+			)
 
 	if (error_csv) {
 		console.error(error_csv)
@@ -157,18 +188,21 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 
 	const {
 		data: { publicUrl },
-	} = supabase.storage.from('csv_maps').getPublicUrl(storage_data!.path)
+	} = supabase.storage
+		.from('csv_maps')
+		.getPublicUrl(storage_data!.path)
 
-	const { data: dataset_data, error: dataset_error } = await supabase
-		.from('csv_dataset')
-		.insert({
-			title: `${municipio.nome} - ${doenca} - ${ano}`,
-			csv_url: publicUrl,
-			fields: headers,
-			endereco: campo_end,
-			CodMun: municipio.CodMun,
-		})
-		.select('*')
+	const { data: dataset_data, error: dataset_error } =
+		await supabase
+			.from('csv_dataset')
+			.insert({
+				title: `${municipio.nome} - ${doenca} - ${ano}`,
+				csv_url: publicUrl,
+				fields: headers,
+				endereco: campo_end,
+				CodMun: municipio.CodMun,
+			})
+			.select('*')
 
 	if (dataset_error) {
 		console.error(dataset_error)
