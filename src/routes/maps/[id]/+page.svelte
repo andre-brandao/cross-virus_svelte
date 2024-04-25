@@ -1,10 +1,12 @@
 <script lang="ts">
 	import type { PageData } from './$types'
-	import CsvUpdate from '$lib/components/maps/edit/csvUpdate.svelte'
+	import Map from '$lib/ArcGis/CSV/Map.svelte'
 
 	export let data: PageData
-
-	const map = data.map
 </script>
 
-<CsvUpdate {map} />
+<Map
+	map_config={{
+		csv_url: data.map.csv_url,
+	}}
+/>

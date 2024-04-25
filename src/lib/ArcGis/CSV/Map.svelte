@@ -1,5 +1,5 @@
 <script lang="ts">
-    import "@arcgis/core/assets/esri/themes/light/main.css";
+    // import "@arcgis/core/assets/esri/themes/light/main.css";
     import MapView from "@arcgis/core/views/MapView";
     import WebMap from "@arcgis/core/WebMap";
     import Map from "@arcgis/core/Map";
@@ -276,7 +276,7 @@
     </div>
     <!-- END TABLE -->
     <!-- LAYER FILTER START -->
-  
+<!--   
     {#if map_config.options?.layer_filter}
       <div
         id="layer-filter-wrap"
@@ -295,7 +295,7 @@
         </select>
       </div>
     {/if}
-  
+   -->
     <!-- END LAYER FILTER -->
   </main>
   <!-- END MAIN MAP -->
