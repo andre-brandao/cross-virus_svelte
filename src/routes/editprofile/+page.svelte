@@ -71,7 +71,7 @@
 						<label
 							for="password"
 							class="block mb-2 text-sm font-medium text-gray-900"
-							>Raio da notificação de novos casos</label
+							>Raio da notificação de novos casos (metros)</label
 						>
 						<input
 							type="number"

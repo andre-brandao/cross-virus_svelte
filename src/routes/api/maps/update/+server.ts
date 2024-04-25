@@ -8,7 +8,10 @@ import type { RequestHandler } from './$types'
 import { parse } from 'csv-parse/sync'
 import { stringify } from 'csv-stringify/sync'
 
-export const POST: RequestHandler = async ({ request, locals }) => {
+export const POST: RequestHandler = async ({
+	request,
+	locals,
+}) => {
 	const supabase = locals.supabase
 	const { user } = await locals.safeGetSession()
 	const municipioUser = user?.user_metadata.municipio
@@ -17,18 +20,25 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	const file = formData.get('csv')
 	const mapID = formData.get('map_id')
 
-	if (!file || !(file instanceof File) || typeof mapID !== 'string') {
+	if (
+		!file ||
+		!(file instanceof File) ||
+		typeof mapID !== 'string'
+	) {
 		return new Response('Dados inválidos', { status: 404 })
 	}
 
-	const { data: map, error: err_csv_dataset } = await supabase
-		.from('csv_dataset')
-		.select('*')
-		.eq('id', mapID)
-		.single()
+	const { data: map, error: err_csv_dataset } =
+		await supabase
+			.from('csv_dataset')
+			.select('*')
+			.eq('id', mapID)
+			.single()
 
 	if (err_csv_dataset || map.CodMun !== municipioUser) {
-		return new Response('Erro ao obter mapa', { status: 404 })
+		return new Response('Erro ao obter mapa', {
+			status: 404,
+		})
 	}
 
 	const addressField = map.endereco
@@ -59,7 +69,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 				novo_csv_record['longitude'] = location?.lng ?? null
 			} catch (e) {
 				console.error(e)
-				console.warn(`Erro ao geocodificar o endereço: ${address}`)
+				console.warn(
+					`Erro ao geocodificar o endereço: ${address}`,
+				)
 			}
 		}
 	}
@@ -101,13 +113,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					},
 				)
 				for (const user of users_to_notify) {
-					if (user.raio_alerta && distance <= user.raio_alerta) {
+					if (
+						user.raio_alerta &&
+						distance <= user.raio_alerta
+					) {
 						if (!user_to_notify_map[user.email]) {
 							user_to_notify_map[user.email] = {
 								enderecos_novos: [],
 							}
 						}
-						user_to_notify_map[user.email].enderecos_novos.push(
+						user_to_notify_map[
+							user.email
+						].enderecos_novos.push(
 							novo_csv_record[addressField],
 						)
 					}
@@ -126,13 +143,18 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 					},
 				)
 				for (const user of users_to_notify) {
-					if (user.raio_alerta && distance <= user.raio_alerta) {
+					if (
+						user.raio_alerta &&
+						distance <= user.raio_alerta
+					) {
 						if (!user_to_notify_map[user.email]) {
 							user_to_notify_map[user.email] = {
 								enderecos_novos: [],
 							}
 						}
-						user_to_notify_map[user.email].enderecos_novos.push(
+						user_to_notify_map[
+							user.email
+						].enderecos_novos.push(
 							novo_csv_record[addressField],
 						)
 					}
@@ -170,11 +192,16 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	console.log(formatedName)
 
 	console.log(novoCSVContent)
-	const { data: storage_data, error: error_csv } = await supabase.storage
-		.from('csv_maps')
-		.update(`${map.CodMun}/${formatedName}`, novoCSVContent, {
-			upsert: true,
-		})
+	const { data: storage_data, error: error_csv } =
+		await supabase.storage
+			.from('csv_maps')
+			.update(
+				`${map.CodMun}/${formatedName}`,
+				novoCSVContent,
+				{
+					upsert: true,
+				},
+			)
 
 	if (error_csv) {
 		console.error('supabase.storage error:')
@@ -185,14 +212,17 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 	const {
 		data: { publicUrl },
-	} = supabase.storage.from('csv_maps').getPublicUrl(storage_data!.path)
+	} = supabase.storage
+		.from('csv_maps')
+		.getPublicUrl(storage_data!.path)
 
-	const { data: dataset_data, error: dataset_error } = await supabase
-		.from('csv_dataset')
-		.update({
-			created_at: new Date().toISOString(),
-		})
-		.eq('id', map.id)
+	const { data: dataset_data, error: dataset_error } =
+		await supabase
+			.from('csv_dataset')
+			.update({
+				created_at: new Date().toISOString(),
+			})
+			.eq('id', map.id)
 	if (dataset_error) {
 		console.error('supabase error:')
 		console.error(dataset_error)
@@ -202,5 +232,7 @@ export const POST: RequestHandler = async ({ request, locals }) => {
 	}
 
 	console.log('csv concluido', formatedName)
-	redirect(303, '/succes')
+	return new Response('CSV atualizado com sucesso', {
+		status: 200,
+	})
 }

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import CsvUptade from '$lib/components/maps/edit/csvUptade.svelte'
+	import CsvUptade from '$lib/components/maps/edit/csvUpdate.svelte'
 	import type { PageData } from './$types'
 
 	export let data: PageData
