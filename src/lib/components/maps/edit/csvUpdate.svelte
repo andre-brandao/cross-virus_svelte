@@ -1,6 +1,6 @@
 <script>
 	//@ts-nocheck
-	import { goto } from "$app/navigation"
+	import { goto } from '$app/navigation'
 
 	export let map = {
 		CodMun: 4311343,
@@ -14,6 +14,7 @@
 	}
 	let file
 	let parsedData = []
+	let campo_endereco = ''
 
 	$: nome_dataset = map.title
 
@@ -42,18 +43,10 @@
 		//     erros+= "" + element + ","
 		//   }
 		// });
-		map.fields.forEach((element) => {
-			if (!headers.includes(element)) {
-				if (
-					element != 'latitude' &&
-					element != 'longitude' &&
-					element != 'Latitude' &&
-					element != 'Longitude'
-				) {
-					console.log('csv invalido')
-					isValidCSV = false
-					erros += '' + element + ','
-				}
+		headers.forEach((element) => {
+			if (!map.fields.includes(element)) {
+				isValidCSV = false
+				erros += '' + element + ','
 			}
 		})
 
@@ -194,7 +187,7 @@
 			</div>
 			{#if erros}
 				<code class="bg-secondary text-white p-1 rounded">
-				 {erros}
+					Erros: {erros}
 				</code>
 			{/if}
 		</div>
