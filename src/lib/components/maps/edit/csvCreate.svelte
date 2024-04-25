@@ -1,5 +1,7 @@
 <script>
 	//@ts-nocheck
+	import { goto } from '$app/navigation'
+
 	export let municipio = {
 		CodMun: 0,
 		created_at: '',
@@ -66,23 +68,21 @@
 		formData.append('ano', ano)
 		formData.append('doenca', doenca)
 
-
-		try {
-			const response = await fetch('/api/maps/create', {
-				method: 'POST',
-				body: formData,
-			})
-
-			if (response.ok) {
-				console.log('Resultado da Geocodificação:', result)
-			} else {
-				console.error(response)
-			}
-			isUploading = false
-		} catch (e) {
-			console.error('Erro ao enviar arquivo:', e)
-			isUploading = false
+		const response = await fetch('/api/maps/create', {
+			method: 'POST',
+			body: formData,
+		})
+		let result = await response.text()
+		console.log(result)
+		if (response.ok) {
+			console.log('Resultado da Geocodificação:', result)
+			goto(`/maps`)
+		} else {
+			erros = result
+			console.error(result)
 		}
+		isUploading = false
+
 		isUploading = false
 	}
 </script>
@@ -218,6 +218,12 @@
 					disabled={!isformValid}>Geocodificar</button
 				>
 			</form>
+
+			{#if erros}
+				<code class="bg-secondary text-white p-1 rounded">
+					{erros}
+				</code>
+			{/if}
 		</div>
 	</main>
 {/if}

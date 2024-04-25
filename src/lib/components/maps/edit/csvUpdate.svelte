@@ -1,5 +1,7 @@
 <script>
 	//@ts-nocheck
+	import { goto } from "$app/navigation"
+
 	export let map = {
 		CodMun: 4311343,
 		created_at: 'string',
@@ -12,7 +14,6 @@
 	}
 	let file
 	let parsedData = []
-	let campo_endereco = ''
 
 	$: nome_dataset = map.title
 
@@ -88,29 +89,22 @@
 		formData.append('csv', file)
 		formData.append('map_id', map.id)
 
-		try {
-			const response = await fetch(
-				`/api/maps/update/${map.id}`,
-				{
-					method: 'POST',
-					body: formData,
-				},
-			)
+		const response = await fetch(`/api/maps/update`, {
+			method: 'POST',
+			body: formData,
+		})
 
-			if (response.ok) {
-				const result = await response.json()
-				console.log('Resultado da Geocodificação:', result)
-			} else {
-				console.error(
-					'Erro ao enviar arquivo:',
-					await response.text(),
-				)
-			}
-			isUploading = false
-		} catch (e) {
-			console.error('Erro ao enviar arquivo:', e)
-			isUploading = false
+		let result = await response.text()
+		console.log(result)
+		if (response.ok) {
+			goto(`/maps/${map.id}`)
+			console.log('Resultado da Geocodificação:', result)
+		} else {
+			erros = result
+			console.error(result)
 		}
+		isUploading = false
+
 		isUploading = false
 	}
 </script>
@@ -162,7 +156,6 @@
 			</div>
 			<form
 				method="post"
-				
 				class="rounded sticky top-10 flex p-5 my-2 border shadow-lg bg-white gap-2 justify-between {!true
 					? 'border-green-300'
 					: 'border-secondary'}"
@@ -178,7 +171,7 @@
 				/>
 
 				<button
-				type="button"
+					type="button"
 					on:click={onFormSubmit}
 					class="bg-primary disabled:bg-secondary items-center text-center rounded-md p-2 transition ease-in-out disabled:text-white text-black hover:disabled:bg-opacity-80 hover:opacity-80 w-96"
 					disabled={!isValidCSV && !isCarregando}
@@ -201,7 +194,7 @@
 			</div>
 			{#if erros}
 				<code class="bg-secondary text-white p-1 rounded">
-					ERRO: O CSV não possui o campo: {erros}
+				 {erros}
 				</code>
 			{/if}
 		</div>
