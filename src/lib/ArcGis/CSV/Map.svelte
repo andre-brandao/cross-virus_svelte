@@ -1,5 +1,5 @@
 <script lang="ts">
-    // import "@arcgis/core/assets/esri/themes/light/main.css";
+    import "@arcgis/core/assets/esri/themes/light/main.css";
     import MapView from "@arcgis/core/views/MapView";
     import WebMap from "@arcgis/core/WebMap";
     import Map from "@arcgis/core/Map";
