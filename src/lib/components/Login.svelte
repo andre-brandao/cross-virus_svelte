@@ -1,6 +1,9 @@
 <script lang="ts">
 	import type { SupabaseClient } from '@supabase/supabase-js'
 	import type { Database } from '../supabase-types'
+	import { createEventDispatcher } from 'svelte'
+
+	const dispatch = createEventDispatcher()
 
 	export let supabase: SupabaseClient
 
@@ -12,15 +15,17 @@
 	let erros = ''
 
 	async function signIn() {
-		const { data, error } = await supabase.auth.signInWithPassword({
-			email,
-			password,
-		})
+		const { data, error } =
+			await supabase.auth.signInWithPassword({
+				email,
+				password,
+			})
 		if (error) {
 			console.error(error)
 			erros = error.message
 			return
 		}
+		window.location.reload()
 	}
 </script>
 
@@ -34,14 +39,20 @@
 		>
 			Crossvirus
 		</a>
-		<div class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0">
+		<div
+			class="w-full bg-white rounded-lg shadow md:mt-0 sm:max-w-md xl:p-0"
+		>
 			<div class="p-6 space-y-4 md:space-y-6 sm:p-8">
 				<h1
 					class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
 				>
 					Faça login na sua conta
 				</h1>
-				<form class="space-y-4 md:space-y-6" method="post" action="/api/auth?#login">
+				<form
+					class="space-y-4 md:space-y-6"
+					method="post"
+					action="/api/auth?#login"
+				>
 					<div>
 						<label
 							for="email"
@@ -57,13 +68,17 @@
 							bind:value={email}
 						/>
 					</div>
-					<p class="text-sm font-medium text-red-500" hidden={!erros}>
+					<p
+						class="text-sm font-medium text-red-500"
+						hidden={!erros}
+					>
 						{erros}
 					</p>
 					<div>
 						<label
 							for="password"
-							class="block mb-2 text-sm font-medium text-gray-900">Senha</label
+							class="block mb-2 text-sm font-medium text-gray-900"
+							>Senha</label
 						>
 						<input
 							type="password"
@@ -80,9 +95,10 @@
 						on:click={signIn}>Login</button
 					>
 					<p class="text-sm font-light text-gray-500">
-						Não possui uma conta, <a
-							href="/cadastro"
-							class="font-medium text-primary hover:underline">cadastre-se</a
+						Não possui uma conta, <button
+							on:click={() => dispatch('signup')}
+							class="font-medium text-primary hover:underline"
+							>cadastre-se</button
 						>
 						?
 					</p>
