@@ -38,11 +38,15 @@
 	const municipio = data.municipio
 
 	async function signOut() {
-		// await supabase.auth.signInWithPassword({
-		// 	email: 'andre@3geolink.com.br',
-		// 	password: 'Andre540',
-		// })
-		await supabase.auth.signOut()
+		console.log('singOut')
+
+		const { error } = await supabase.auth.signOut()
+
+		if (error) {
+			console.error(error)
+			return
+		}
+		window.location.reload()
 	}
 </script>
 
@@ -76,14 +80,13 @@
 
 	<div class="flex gap-2">
 		<NavButton
-			href='/editprofile'
-			label='Editar perfil'
+			href="/editprofile"
+			label="Editar perfil"
 			Icon={Settings}
 		/>
-		<NavButton
-			on:click={signOut}
-			label={user?.email}
-			Icon={LogOut}
-		/>
+
+		<button on:click={signOut}>
+			<NavButton label={user?.email} Icon={LogOut} />
+		</button>
 	</div>
 </nav>

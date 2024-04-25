@@ -10,7 +10,6 @@
 	let email: string
 	let password: string
 
-	let municipio: string
 
 	let erros = ''
 
@@ -50,8 +49,7 @@
 				</h1>
 				<form
 					class="space-y-4 md:space-y-6"
-					method="post"
-					action="/api/auth?#login"
+
 				>
 					<div>
 						<label
