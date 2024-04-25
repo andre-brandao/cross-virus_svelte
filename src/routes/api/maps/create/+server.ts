@@ -2,6 +2,7 @@ import {
 	geocodeAddress,
 	getDistanceFromLatLonInKm,
 	sendEmail,
+	formatEmail
 } from '$lib/utils'
 import type { RequestHandler } from './$types'
 import { parse } from 'csv-parse/sync'
@@ -155,8 +156,10 @@ export const POST: RequestHandler = async ({
 			const email = not
 			const enderecos = user.enderecos_novos
 			const message = `Novos endereços próximos a você: ${enderecos.join(', ')}`
+
+			const emailToSend = formatEmail(enderecos)
 			console.log('Enviando email para ', email)
-			const { ok } = await sendEmail(email, message)
+			const { ok } = await sendEmail(email, emailToSend)
 			if (!ok) {
 				console.log('Erro ao enviar email para ', email)
 			}

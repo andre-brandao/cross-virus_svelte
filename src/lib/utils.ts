@@ -1,5 +1,8 @@
 import nodemailer from 'nodemailer'
-import { GOOGLE_MAPS_KEY, GMAIL_PASSWORD } from '$env/static/private'
+import {
+	GOOGLE_MAPS_KEY,
+	GMAIL_PASSWORD,
+} from '$env/static/private'
 import { Client } from '@googlemaps/google-maps-services-js'
 const maps_client = new Client({})
 export async function geocodeAddress(address: string) {
@@ -12,11 +15,14 @@ export async function geocodeAddress(address: string) {
 			},
 		})
 
-		const location = result.data.results[0]?.geometry.location
+		const location =
+			result.data.results[0]?.geometry.location
 		return location
 	} catch (e) {
 		console.error(e)
-		console.warn(`Erro ao geocodificar o endereço: ${address}`)
+		console.warn(
+			`Erro ao geocodificar o endereço: ${address}`,
+		)
 	}
 }
 
@@ -33,7 +39,7 @@ export async function sendEmail(to: string, text: string) {
 		from: 'admin@crossgeo.com.br',
 		to: to, // Use the 'to' field from the request body
 		subject: 'Alerta Crossvirus',
-		text: text, // Use the 'text' field from the request body
+		html: text, // Use the 'text' field from the request body
 	}
 
 	try {
@@ -68,4 +74,69 @@ export function getDistanceFromLatLonInKm(
 				Math.sin(dLng / 2),
 		c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 	return R * c * 1000
+}
+export function formatEmail(ends: string[]) {
+	return `
+	<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Alerta de Email</title>
+	<style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #ffffff;
+      }
+
+      .container {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #f4f4f4;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        color: #333;
+        text-align: center;
+      }
+
+      h3 {
+        color: #666;
+      }
+
+      ul {
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 5px;
+        color: #888;
+      }
+    </style>
+	</head>
+	<body>
+	<div class="container">
+	<h1>Alerta <span style="color: #c00000;">Crossvirus</span></h1>
+	<h3 style="text-align: center;">Foram encontrados novos casos em <span style="color: #FFA500;">nomecidade</span></h3>
+	  <ul>
+	${ends.map((e) => {
+		return `
+		<li>  
+		${e}
+		</li>
+		`
+	})}
+	</ul>
+		<h3>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure magni
+        dolores dicta, deleniti porro libero!
+      </h3>
+	  </div>
+  </body>
+  </html>
+	`
 }
