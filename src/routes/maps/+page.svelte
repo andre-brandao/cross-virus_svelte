@@ -36,10 +36,30 @@
 			</div>
 		{/each}
 	</div>
+
 	<div class="my-4">
 		<Button
 			href="/maps/create"
 			label="Crie um novo mapa a partir de dados CSV"
 		/>
 	</div>
+
+	<!-- svelte-ignore a11y-missing-attribute -->
+	{#if maps.length === 0}
+		<div
+			class="flex flex-col items-center justify-center w-full"
+		>
+			<h1>
+				Parece que seu municipio ainda não tem um mapa.
+				Entre em contato com a prefeitura ou com a equipe
+				crossvirus para criarmos um mapa com os dados de
+				interesse público.
+			</h1>
+			<iframe
+				class="w-full h-[70vh] my-4"
+				src="https://www.crossvirus.com.br/maps/embed"
+				frameborder="0"
+			></iframe>
+		</div>
+	{/if}
 </main>

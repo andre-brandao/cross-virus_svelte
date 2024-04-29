@@ -5,6 +5,7 @@
 		Map,
 		AlignJustify,
 		LogOut,
+		MapPinned 
 	} from 'lucide-svelte'
 	import type { LayoutData } from '../../../routes/$types'
 	import type { ComponentType } from 'svelte'
@@ -31,6 +32,8 @@
 			icon: Home,
 		},
 		{ label: 'Mapas', href: '/maps', icon: Map },
+		{ label: 'Mapas públicos', href: 'https://crossvirus.com.br/maps', icon: MapPinned },
+
 	]
 
 	const user = data.session?.user
