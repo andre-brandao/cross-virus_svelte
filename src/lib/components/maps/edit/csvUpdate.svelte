@@ -37,18 +37,11 @@
 		const headers = lines[0].split(',')
 		isValidCSV = true
 		erros = ''
-		// headers.forEach(element => {
-		//   if (!map.fields.includes(element)) {
-		//     isValidCSV = false;
-		//     erros+= "" + element + ","
-		//   }
-		// });
-		headers.forEach((element) => {
-			if (!map.fields.includes(element)) {
-				isValidCSV = false
-				erros += '' + element + ','
-			}
-		})
+
+		if(!headers.includes(map.endereco)){
+			isValidCSV = false
+			erros += "O arquivo não contém o campo de endereço, ou o campo de endereço não é o mesmo do dataset."
+		}
 
 		if (erros) {
 			isCarregando = false
