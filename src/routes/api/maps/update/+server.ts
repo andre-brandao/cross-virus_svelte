@@ -166,9 +166,12 @@ export const POST: RequestHandler = async ({
 			const user = user_to_notify_map[not]
 			const email = not
 			const enderecos = user.enderecos_novos
-			const message = `Novos endereços próximos a você: ${enderecos.join(', ')}`
 			console.log('Enviando email para ', email)
-			const { ok } = await sendEmail(email, message)
+			const { ok } = await sendEmail(email, {
+				enderecos,
+				municipio: map.title,
+				map_link: 'https://prefeitura.crossvirus.com.br',
+			})
 			if (!ok) {
 				console.log('Erro ao enviar email para ', email)
 			}

@@ -26,7 +26,14 @@ export async function geocodeAddress(address: string) {
 	}
 }
 
-export async function sendEmail(to: string, text: string) {
+export async function sendEmail(
+	to: string,
+	email: {
+		municipio: string
+		enderecos: string[]
+		map_link: string
+	},
+) {
 	const transporter = nodemailer.createTransport({
 		service: 'gmail',
 		auth: {
@@ -39,7 +46,7 @@ export async function sendEmail(to: string, text: string) {
 		from: 'admin@crossgeo.com.br',
 		to: to, // Use the 'to' field from the request body
 		subject: 'Alerta Crossvirus',
-		html: text, // Use the 'text' field from the request body
+		html: formatEmail(email), // Use the 'text' field from the request body
 	}
 
 	try {
@@ -75,9 +82,13 @@ export function getDistanceFromLatLonInKm(
 		c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 	return R * c * 1000
 }
-export function formatEmail(ends: string[]) {
+export function formatEmail(email: {
+	municipio: string
+	enderecos: string[]
+	map_link: string
+}) {
 	return `
-	<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -121,9 +132,9 @@ export function formatEmail(ends: string[]) {
 	<body>
 	<div class="container">
 	<h1>Alerta <span style="color: #c00000;">Crossvirus</span></h1>
-	<h3 style="text-align: center;">Foram encontrados novos casos em <span style="color: #FFA500;">nomecidade</span></h3>
+	<h3 style="text-align: center;">Foram encontrados novos casos em <span style="color: #FFA500;">${email.municipio}</span></h3>
 	  <ul>
-	${ends.map((e) => {
+	${email.enderecos.map((e) => {
 		return `
 		<li>  
 		${e}
@@ -134,6 +145,9 @@ export function formatEmail(ends: string[]) {
 		<h3>
         Caso tenha alguma duvida entre em contato com nossa equipe!
       </h3>
+	  <h3>
+		<a href="${email.map_link}">Clique aqui para visualizar no mapa</a>
+		</h3>
 	  </div>
   </body>
   </html>

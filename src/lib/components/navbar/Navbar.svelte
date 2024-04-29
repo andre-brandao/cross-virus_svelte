@@ -51,7 +51,7 @@
 </script>
 
 <nav
-	class="flex max-md:flex-col gap-2 justify-between p-2 m-2 bg-white rounded"
+	class="sticky top-1 flex max-md:flex-col gap-2 justify-between p-2 m-2 bg-white rounded"
 >
 	<div class="flex max-md:flex-col gap-2">
 		{#if itens.length > 0}

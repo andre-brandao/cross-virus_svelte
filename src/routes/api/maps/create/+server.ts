@@ -2,7 +2,7 @@ import {
 	geocodeAddress,
 	getDistanceFromLatLonInKm,
 	sendEmail,
-	formatEmail
+	formatEmail,
 } from '$lib/utils'
 import type { RequestHandler } from './$types'
 import { parse } from 'csv-parse/sync'
@@ -155,11 +155,12 @@ export const POST: RequestHandler = async ({
 			const user = user_to_notify_map[not]
 			const email = not
 			const enderecos = user.enderecos_novos
-			const message = `Novos endereços próximos a você: ${enderecos.join(', ')}`
-
-			const emailToSend = formatEmail(enderecos)
 			console.log('Enviando email para ', email)
-			const { ok } = await sendEmail(email, emailToSend)
+			const { ok } = await sendEmail(email, {
+				enderecos,
+				municipio: municipio.nome,
+				map_link: "https://prefeitura.crossvirus.com.br",
+			})
 			if (!ok) {
 				console.log('Erro ao enviar email para ', email)
 			}
