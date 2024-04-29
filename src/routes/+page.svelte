@@ -6,6 +6,6 @@
 	console.log(municipio)
 </script>
 
-<main class="flex justify-center items-center h-full">
+<main class="flex justify-center items-center h-screen">
 	<h1>Bem vindo a central crossvirus de {municipio?.nome} - {municipio?.UF}</h1>
 </main>

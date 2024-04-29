@@ -132,8 +132,7 @@ export function formatEmail(ends: string[]) {
 	})}
 	</ul>
 		<h3>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure magni
-        dolores dicta, deleniti porro libero!
+        Caso tenha alguma duvida entre em contato com nossa equipe!
       </h3>
 	  </div>
   </body>
