@@ -57,5 +57,16 @@ export const load: LayoutLoad = async ({ fetch, data, depends }) => {
 		error(404, err_municipio.message)
 	}
 
-	return { supabase, session, municipio }
+	const municipioId = user?.user_metadata.municipio
+
+	const { data: maps, error: err } = await supabase
+		.from('csv_dataset')
+		.select('title')
+		.eq('CodMun', municipioId)
+
+	if (err) {
+		error(404, err.message)
+	}
+
+	return { supabase, session, municipio, maps }
 }
