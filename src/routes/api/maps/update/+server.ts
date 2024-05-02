@@ -93,10 +93,18 @@ export const POST: RequestHandler = async ({
 	if (users_to_notify) {
 		const user_to_notify_map: {
 			[key: string]: {
-				enderecos_novos: string[]
+				enderecos_novos: {
+					endereco: string
+					lat: string
+					long: string
+				}[]
+				enderecos_velhos: {
+					endereco: string
+					lat: string
+					long: string
+				}[]
 			}
 		} = {}
-
 		console.log('Iniciando notificacao de users')
 
 		for (const novo_csv_record of novo_csv_parsed) {
@@ -117,16 +125,13 @@ export const POST: RequestHandler = async ({
 						user.raio_alerta &&
 						distance <= user.raio_alerta
 					) {
-						if (!user_to_notify_map[user.email]) {
-							user_to_notify_map[user.email] = {
-								enderecos_novos: [],
-							}
-						}
 						user_to_notify_map[
 							user.email
-						].enderecos_novos.push(
-							novo_csv_record[addressField],
-						)
+						].enderecos_novos.push({
+							endereco: novo_csv_record2[addressField],
+							lat: novo_csv_record2['latitude'],
+							long: novo_csv_record2['longitude'],
+						})
 					}
 				}
 			}
@@ -147,16 +152,13 @@ export const POST: RequestHandler = async ({
 						user.raio_alerta &&
 						distance <= user.raio_alerta
 					) {
-						if (!user_to_notify_map[user.email]) {
-							user_to_notify_map[user.email] = {
-								enderecos_novos: [],
-							}
-						}
 						user_to_notify_map[
 							user.email
-						].enderecos_novos.push(
-							novo_csv_record[addressField],
-						)
+						].enderecos_novos.push({
+							endereco: velho_csv_record[addressField],
+							lat: velho_csv_record['latitude'],
+							long: velho_csv_record['longitude'],
+						})
 					}
 				}
 			}

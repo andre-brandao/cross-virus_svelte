@@ -114,7 +114,11 @@ export const POST: RequestHandler = async ({
 	if (users_to_notify) {
 		const user_to_notify_map: {
 			[key: string]: {
-				enderecos_novos: string[]
+				enderecos_novos: {
+					endereco: string
+					lat: string
+					long: string
+				}[]
 			}
 		} = {}
 
@@ -145,7 +149,11 @@ export const POST: RequestHandler = async ({
 						}
 						user_to_notify_map[
 							user.email
-						].enderecos_novos.push(record1[campo_end])
+						].enderecos_novos.push({
+							endereco: record1[campo_end],
+							lat: record1['latitude'],
+							long: record1['longitude'],
+						})
 					}
 				}
 			}
@@ -159,7 +167,7 @@ export const POST: RequestHandler = async ({
 			const { ok } = await sendEmail(email, {
 				enderecos,
 				municipio: municipio.nome,
-				map_link: "https://prefeitura.crossvirus.com.br",
+				map_link: 'https://prefeitura.crossvirus.com.br',
 			})
 			if (!ok) {
 				console.log('Erro ao enviar email para ', email)

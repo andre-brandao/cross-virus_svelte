@@ -3,6 +3,7 @@ import {
 	GOOGLE_MAPS_KEY,
 	GMAIL_PASSWORD,
 } from '$env/static/private'
+
 import { Client } from '@googlemaps/google-maps-services-js'
 const maps_client = new Client({})
 export async function geocodeAddress(address: string) {
@@ -26,11 +27,44 @@ export async function geocodeAddress(address: string) {
 	}
 }
 
+export async function createGoogleMapsURL(
+	coordinates: {
+		lat: string
+		long: string
+	}[],
+) {
+	try {
+		const markersQuery = coordinates
+			.map(
+				(coord, index) =>
+					`markers=color:red%7Clabel:${index + 1}%7C${coord.lat},${coord.long}`,
+			)
+			.join('&')
+
+		const baseURL = `https://www.google.com/maps/dir/?api=1&travelmode=driving&`
+		const markersURL = `${baseURL}${markersQuery}&key=${GOOGLE_MAPS_KEY}`
+
+		console.log(
+			'Generated Google Maps URL with markers:',
+			markersURL,
+		)
+		return markersURL
+	} catch (error) {
+		console.error(
+			'Error generating Google Maps URL:',
+			error,
+		)
+	}
+}
 export async function sendEmail(
 	to: string,
 	email: {
 		municipio: string
-		enderecos: string[]
+		enderecos: {
+			endereco: string
+			lat: string
+			long: string
+		}[]
 		map_link: string
 	},
 ) {
@@ -67,7 +101,7 @@ export function getDistanceFromLatLonInKm(
 	position1: { lat: number; lon: number },
 	position2: { lat: number; lon: number },
 ) {
-	var deg2rad = function (deg: number) {
+	var deg2rad =  (deg: number) => {
 			return deg * (Math.PI / 180)
 		},
 		R = 6371,
@@ -84,7 +118,11 @@ export function getDistanceFromLatLonInKm(
 }
 export function formatEmail(email: {
 	municipio: string
-	enderecos: string[]
+	enderecos: {
+		endereco: string
+		lat: string
+		long: string
+	}[]
 	map_link: string
 }) {
 	return `
@@ -137,7 +175,7 @@ export function formatEmail(email: {
 	${email.enderecos.map((e) => {
 		return `
 		<li>  
-		${e}
+		${e.endereco}
 		</li>
 		`
 	})}
