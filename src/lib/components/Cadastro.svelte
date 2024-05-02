@@ -37,10 +37,12 @@
 			return
 		}
 
-		if(!municipio){
+		if (!municipio) {
 			erros = 'Selecione um município'
 			return
 		}
+
+		console.log('signing up', email, municipio)
 
 		const { data, error } = await supabase.auth.signUp({
 			email,
