@@ -19,7 +19,7 @@
 				>{municipio?.nome} - {municipio?.UF}</span
 			>
 		</h1>
-		<h1>
+		<h1 class="font-bold text-lg">
 			Doencas registradas em {municipio?.nome}:
 		</h1>
 		<div class=" grid grid-cols-3 gap-2 mb-7 mt-3">
@@ -41,11 +41,23 @@
 			Icon={Map}
 		/>
 	</div>
+	<p class="text-xl font-bold text-gray-600 mb-2">
+		Informacões da cidade:
+	</p>
 	<p class="text-lg text-gray-600">
-		Mantenha-se seguro e informado sobre as últimas
-		atualizações.
+		Data de criação: {municipio?.created_at}
+	</p>
+	<p class="text-lg text-gray-600">
+		Código do município: {municipio?.CodMun}
 	</p>
 	<p class="text-lg text-gray-600">
 		População estimada: {municipio?.pop_est}
 	</p>
+	<p class="text-lg text-gray-600">
+		Faixa da população: {municipio?.faixa_pop}
+	</p>
+	<p class="text-lg text-gray-600">
+		Região: {municipio?.regiao}
+	</p>
+	<p class="text-lg text-gray-600">UF: {municipio?.UF}</p>
 </main>
