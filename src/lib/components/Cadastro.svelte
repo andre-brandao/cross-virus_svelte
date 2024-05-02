@@ -10,7 +10,7 @@
 	let email: string
 	let password: string
 
-	let municipio: string
+	let municipio: number
 
 	let municipios: {
 		nome: string
@@ -34,6 +34,11 @@
 				' - ' +
 				exists.municipios?.UF
 			erros = 'Email já cadastrado em ' + muni
+			return
+		}
+
+		if(!municipio){
+			erros = 'Selecione um município'
 			return
 		}
 
@@ -152,6 +157,7 @@
 							Município
 						</label>
 						<select
+							bind:value={municipio}
 							disabled={municipios.length === 0}
 							name="municipio"
 							id="municipio"
