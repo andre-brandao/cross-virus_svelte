@@ -19,6 +19,33 @@ export const POST: RequestHandler = async ({
 	} = await supabase.auth.getSession()
 
 	const CodMun = session?.user?.user_metadata.municipio
+	const userID = session?.user.id
+
+	if (!CodMun || !userID) {
+		return new Response(
+			'Usuário não encontrado, por favor faça login novamente',
+			{ status: 404 },
+		)
+	}
+
+	const { data: user_limit, error: err_user_limit } =
+		await supabase
+			.from('info_user')
+			.select('*')
+			.eq('auth_id', userID)
+			.single()
+
+	if (err_user_limit) {
+		console.error(err_user_limit)
+		return new Response(
+			'Erro ao obter informações do usuário, contacte suporte crossvirus!',
+			{ status: 404 },
+		)
+	}
+
+	const limite_geopoints = user_limit?.limite_geopoints
+
+	let used_geopoints = user_limit?.geopoints_utilizados
 
 	const { data: municipio, error: error_municipio } =
 		await supabase
@@ -91,6 +118,18 @@ export const POST: RequestHandler = async ({
 			console.log('Geocodificando' + address)
 			try {
 				const location = await geocodeAddress(address)
+				used_geopoints++
+
+				if (used_geopoints > limite_geopoints) {
+					await supabase.from('info_user').update({
+						geopoints_utilizados: used_geopoints,
+					})
+
+					return new Response(
+						'Limite de geopoints atingido, por favor entre em contato com suporte crossvirus',
+						{ status: 404 },
+					)
+				}
 
 				record['latitude'] = location?.lat ?? null
 				record['longitude'] = location?.lng ?? null
@@ -102,6 +141,10 @@ export const POST: RequestHandler = async ({
 			}
 		}
 	}
+
+	await supabase.from('info_user').update({
+		geopoints_utilizados: used_geopoints,
+	})
 
 	console.log('geocodificacao COMPLETA')
 
@@ -213,6 +256,8 @@ export const POST: RequestHandler = async ({
 				fields: headers,
 				endereco: campo_end,
 				CodMun: municipio.CodMun,
+				ano: Number(ano),
+				doenca: doenca,
 			})
 			.select('*')
 

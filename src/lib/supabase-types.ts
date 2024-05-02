@@ -11,30 +11,36 @@ export type Database = {
     Tables: {
       csv_dataset: {
         Row: {
+          ano: number
           CodMun: number
           created_at: string
           created_by: string
           csv_url: string
+          doenca: string
           endereco: string
           fields: string[]
           id: number
           title: string
         }
         Insert: {
+          ano?: number
           CodMun: number
           created_at?: string
           created_by?: string
           csv_url: string
+          doenca?: string
           endereco?: string
           fields: string[]
           id?: number
           title: string
         }
         Update: {
+          ano?: number
           CodMun?: number
           created_at?: string
           created_by?: string
           csv_url?: string
+          doenca?: string
           endereco?: string
           fields?: string[]
           id?: number
@@ -56,7 +62,9 @@ export type Database = {
           CodMun: number
           created_at: string
           email: string
+          geopoints_utilizados: number
           id: number
+          limite_geopoints: number
           nome: string | null
           raio_alerta: number | null
         }
@@ -65,7 +73,9 @@ export type Database = {
           CodMun: number
           created_at?: string
           email: string
+          geopoints_utilizados?: number
           id?: number
+          limite_geopoints?: number
           nome?: string | null
           raio_alerta?: number | null
         }
@@ -74,7 +84,9 @@ export type Database = {
           CodMun?: number
           created_at?: string
           email?: string
+          geopoints_utilizados?: number
           id?: number
+          limite_geopoints?: number
           nome?: string | null
           raio_alerta?: number | null
         }
