@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '$lib/components/Button.svelte'
+	import { onMount } from 'svelte'
 	import type { PageData } from './$types'
 	import { Map } from 'lucide-svelte'
 
@@ -7,6 +8,26 @@
 	const municipio = data.municipio
 	const maps = data.maps
 	console.log(municipio)
+
+	let casos_doenca: {
+		doenca: string
+		casos: number
+	}[] = []
+
+	onMount(async () => {
+		const resp = await fetch('/api/casos').then((res) =>
+			res.json(),
+		)
+		console.log(resp)
+
+		casos_doenca = resp.map((caso) => {
+			return {
+				doenca: caso[0],
+				casos: caso[1],
+			}
+		})
+		console.log(casos_doenca)
+	})
 </script>
 
 <main
@@ -41,6 +62,20 @@
 			Icon={Map}
 		/>
 	</div>
+
+	<p class="text-xl font-bold text-gray-600 mb-2">
+		Casos notificados de doenças:
+	</p>
+	{#each casos_doenca ?? [] as q_casos}
+		<div class="flex justify-between w-60">
+			<p class="text-lg text-gray-600">
+				{q_casos.doenca}:
+			</p>
+			<p class="text-lg text-red-600">
+				{q_casos.casos}
+			</p>
+		</div>
+	{/each}
 	<p class="text-xl font-bold text-gray-600 mb-2">
 		Informacões da cidade:
 	</p>

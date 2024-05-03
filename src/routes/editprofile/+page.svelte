@@ -45,6 +45,10 @@
 					{municipios?.nome} - {municipios?.UF} ({municipios?.CodMun})
 				</h1>
 				<p class="text-center">{info.email}</p>
+				<p>
+					Geopoints utilzados: {info.geopoints_utilizados} /
+					{info.limite_geopoints}
+				</p>
 				<form class="space-y-4 md:space-y-6" method="post">
 					<div>
 						<label
