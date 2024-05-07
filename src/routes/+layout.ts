@@ -61,7 +61,7 @@ export const load: LayoutLoad = async ({ fetch, data, depends }) => {
 
 	const { data: maps, error: err } = await supabase
 		.from('csv_dataset')
-		.select('title')
+		.select('title, id')
 		.eq('CodMun', municipioId)
 
 	if (err) {

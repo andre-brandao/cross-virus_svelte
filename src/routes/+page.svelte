@@ -33,50 +33,57 @@
 <main
 	class="flex flex-col justify-center items-center md:h-[90vh] bg-gray-100"
 >
-	<div class="text-center">
-		<h1 class="text-3xl font-bold mb-4">
-			Bem-vindo à Central Crossvirus de <span
-				class="text-primary"
-				>{municipio?.nome} - {municipio?.UF}</span
-			>
-		</h1>
-		<h1 class="font-bold text-lg">
-			Doencas registradas em {municipio?.nome}:
-		</h1>
-		<div class=" grid grid-cols-3 gap-2 mb-7 mt-3">
-			{#if maps}
-				{#each maps as mapa}
-					<div class="border-2 rounded p-4">
-						<p>{mapa.title}</p>
-					</div>
-				{/each}
-			{:else}
-				<h1>Nenhum mapa registrado!</h1>
-			{/if}
+	<h1 class="text-3xl font-bold mb-4 text-center">
+		Bem-vindo à Central Crossvirus de <span
+			class="text-primary"
+			>{municipio?.nome} - {municipio?.UF}</span
+		>
+	</h1>
+	<div class="mb-5">
+		<p class="text-2xl font-bold text-black mb-2">
+			Casos notificados de doenças:
+		</p>
+		<div
+			class="flex flex-col border-4 p-4 rounded-lg justify-center items-center"
+		>
+			{#each casos_doenca ?? [] as q_casos}
+				<div class="flex justify-between w-60">
+					<p class="text-xl text-gray-600">
+						{q_casos.doenca}:
+					</p>
+					<p class="text-xl text-secondary">
+						{q_casos.casos}
+					</p>
+				</div>
+			{/each}
 		</div>
+	</div>
+	<h1 class="font-bold text-lg text-center">
+		Mapas de {municipio?.nome}:
+	</h1>
+	<div class=" grid grid-cols-3 gap-2 mb-7 mt-3">
+		{#if maps}
+			{#each maps as mapa}
+				<a
+					href="maps/{mapa.id}"
+					class="border-2 rounded p-4"
+				>
+					<p>{mapa.title}</p>
+				</a>
+			{/each}
+		{:else}
+			<h1>Nenhum mapa registrado!</h1>
+		{/if}
 	</div>
 	<div class="mb-4">
 		<Button
-			label={`Acessar mapas de ${municipio?.nome}`}
+			label={`Acessar todos mapas de ${municipio?.nome}`}
 			href={'/maps'}
 			Icon={Map}
 		/>
 	</div>
 
-	<p class="text-xl font-bold text-gray-600 mb-2">
-		Casos notificados de doenças:
-	</p>
-	{#each casos_doenca ?? [] as q_casos}
-		<div class="flex justify-between w-60">
-			<p class="text-lg text-gray-600">
-				{q_casos.doenca}:
-			</p>
-			<p class="text-lg text-red-600">
-				{q_casos.casos}
-			</p>
-		</div>
-	{/each}
-	<p class="text-xl font-bold text-gray-600 mb-2">
+	<p class="text-xl font-bold text-gray-600 mt-3 mb-2">
 		Informacões da cidade:
 	</p>
 	<p class="text-lg text-gray-600">
