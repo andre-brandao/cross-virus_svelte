@@ -122,7 +122,7 @@
 				</div>
 			</div>
 
-			<aside class="flex flex-col flex-1">
+			<aside class="flex flex-col flex-1 mb-5">
 				<h3 class="text-2xl text-black">
 					Casos notificados de doenças:
 				</h3>
