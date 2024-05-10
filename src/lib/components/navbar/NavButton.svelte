@@ -8,7 +8,7 @@
 
 <a
 	{href}
-	class="group flex justify-between items-center text-center rounded-md p-2  transition ease-in-out bg-gray-200 text-black hover:text-white hover:bg-secondary px-5"
+	class="group flex justify-between items-center text-center rounded-md p-2  transition ease-in-out bg-gray-200 text-black hover:text-white hover:bg-secondary px-5 hover:shadow-md shadow-secondary"
 >
 	{#if Icon}
 		<svelte:component this={Icon} class="h-5 w-5" />
