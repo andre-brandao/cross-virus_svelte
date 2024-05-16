@@ -116,13 +116,13 @@
 			<input
 				class="bg-slate-300"
 				type="label"
-				placeholder="label"
+				placeholder="Nome do Filtro SQL Ex: 'BAIRRO'"
 				bind:value={new_label}
 			/>
 			<input
 				class="bg-slate-300"
 				type="text"
-				placeholder="= 'string || => numero'"
+				placeholder="Filtro SQL Ex: 'CAMPO_TEXTO = 'TEXTO' OR CAMPO_NUMERICO > 10"
 				bind:value={query_string}
 			/>
 			<button
@@ -192,7 +192,7 @@
 					</ul>
 
 					<h2 class="text-xl mt-4">
-						Filtros de Múltiplos Filtros
+						Múltiplos Filtros
 					</h2>
 					<ul class="flex flex-col space-y-4">
 						<li>
