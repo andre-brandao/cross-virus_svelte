@@ -23,3 +23,43 @@ export interface LayerFilter {
   where: string;
   label: string;
 }
+
+
+export interface DragSearchMapParams {
+  // map: WebMap | Map
+  csv_url: string;
+
+  options?: {
+    drag_filter?: {
+      sql_filter: ArcgisFilter[];
+      where?: string;
+    };
+    layer_filter?: LayerFilter[];
+  };
+  // 'on:event': (e: CustomEvent<boolean>) => void;
+}
+
+
+export interface MapWrapperParams {
+  mapID: string;
+
+  charts: ChartFiltered[];
+
+  options?: {
+    drag_filter?: {
+      radius?: number;
+      fieldNames: string[];
+      where?: string;
+    };
+    feature_table?: {
+      title: string;
+      fields: {
+        type: string;
+        fieldName: string;
+        label: string;
+        direction?: "asc" | "desc";
+      }[];
+    };
+    layer_filter?: LayerFilter[];
+  };
+}

@@ -12,6 +12,7 @@ export type Database = {
       csv_dataset: {
         Row: {
           ano: number
+          center: Json | null
           CodMun: number
           created_at: string
           created_by: string
@@ -24,6 +25,7 @@ export type Database = {
         }
         Insert: {
           ano?: number
+          center?: Json | null
           CodMun: number
           created_at?: string
           created_by?: string
@@ -36,6 +38,7 @@ export type Database = {
         }
         Update: {
           ano?: number
+          center?: Json | null
           CodMun?: number
           created_at?: string
           created_by?: string
