@@ -28,7 +28,7 @@ export interface LayerFilter {
 export interface DragSearchMapParams {
   // map: WebMap | Map
   csv_url: string;
-
+  fieldNames: string[];
   options?: {
     drag_filter?: {
       sql_filter: ArcgisFilter[];
@@ -41,24 +41,16 @@ export interface DragSearchMapParams {
 
 
 export interface MapWrapperParams {
-  mapID: string;
+  csv_url: string;
 
   charts: ChartFiltered[];
+  fieldNames: string[];
 
   options?: {
     drag_filter?: {
       radius?: number;
       fieldNames: string[];
       where?: string;
-    };
-    feature_table?: {
-      title: string;
-      fields: {
-        type: string;
-        fieldName: string;
-        label: string;
-        direction?: "asc" | "desc";
-      }[];
     };
     layer_filter?: LayerFilter[];
   };

@@ -90,6 +90,21 @@ export const POST: RequestHandler = async ({
 		)
 	}
 
+	// check if file already exists
+	const { data: dataset_exists } = await supabase.storage
+		.from('csv_maps')
+		.list(`${municipio.CodMun}/${fileName}`)
+	if (dataset_exists) {
+		console.log(dataset_exists);
+		
+		return new Response(
+			'Esse mapa já existe, por favor tente outro nome',
+			{
+				status: 404,
+			},
+		)
+	}
+
 	const csvContent = await csv.text()
 	const records = parse(csvContent, {
 		columns: true,
@@ -121,13 +136,18 @@ export const POST: RequestHandler = async ({
 				used_geopoints++
 
 				if (used_geopoints > limite_geopoints) {
-					await supabase.from('info_user').update({
-						geopoints_utilizados: used_geopoints,
-					})
+					const { error: err_info_up } = await supabase
+						.from('info_user')
+						.update({
+							geopoints_utilizados: used_geopoints,
+						})
+					if (err_info_up) {
+						console.error(err_info_up.message)
+					}
 
 					return new Response(
 						'Limite de geopoints atingido, por favor entre em contato com suporte crossvirus',
-						{ status: 404 },
+						{ status: 402 },
 					)
 				}
 

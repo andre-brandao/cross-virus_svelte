@@ -30,6 +30,7 @@
 	}
 
 	let isValidCSV = false
+	let geoPointsEsgotados = false
 	let erros = ''
 
 	function parseCsv(csvData) {
@@ -38,9 +39,10 @@
 		isValidCSV = true
 		erros = ''
 
-		if(!headers.includes(map.endereco)){
+		if (!headers.includes(map.endereco)) {
 			isValidCSV = false
-			erros += "O arquivo não contém o campo de endereço, ou o campo de endereço não é o mesmo do dataset."
+			erros +=
+				'O arquivo não contém o campo de endereço, ou o campo de endereço não é o mesmo do dataset.'
 		}
 
 		if (erros) {
@@ -86,6 +88,9 @@
 			goto(`/maps/${map.id}`)
 			console.log('Resultado da Geocodificação:', result)
 		} else {
+			if (response.status === 402) {
+				geoPointsEsgotados = true
+			}
 			erros = result
 			console.error(result)
 		}
@@ -129,7 +134,7 @@
 	</main>
 {:else}
 	<main
-		class="flex items-center justify-center bg-gray-100 md:h-[90vh]"
+		class="flex items-center justify-center bg-gray-100"
 	>
 		<div class="">
 			<div class="flex justify-between p-5">
@@ -182,6 +187,16 @@
 				<code class="bg-secondary text-white p-1 rounded">
 					Erros: {erros}
 				</code>
+				{#if geoPointsEsgotados}
+					<code class="bg-secondary text-white p-1 rounded">
+						GeoPoints Esgotados
+						<!-- preciso de comprar mais geopoints no crossvirus -->
+						<a
+							href="https://wa.me/5531983861852?text=Olá%20gostaria%20de%20comprar%20mais%20geopoints%20para%20o%20meu%20projeto%20no%20CrossVirus"
+							>Clique aqui para resgatar mais</a
+						>
+					</code>
+				{/if}
 			{/if}
 		</div>
 	</main>
