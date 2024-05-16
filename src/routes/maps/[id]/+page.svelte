@@ -51,6 +51,12 @@
 	let chart: any
 
 	let is_exemplo_open = true
+
+	$: mapCOnfig = {
+		csv_url: map?.csv_url,
+		charts: [newChart],
+		fieldNames: map?.fields,
+	}
 </script>
 
 <Modal
@@ -232,13 +238,4 @@
 	<AtualizarMapa {map} />
 </Modal>
 
-{#key newChart}
-	<Map
-		map_config={{
-			csv_url: map?.csv_url,
-			charts: [newChart],
-			fieldNames: map?.fields,
-			options: {},
-		}}
-	/>
-{/key}
+<Map bind:map_config={mapCOnfig} />

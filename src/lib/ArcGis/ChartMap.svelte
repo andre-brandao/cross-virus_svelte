@@ -21,7 +21,7 @@
 
 	export let map_config: MapWrapperParams
 
-	const formated_mapConfig: DragSearchMapParams = {
+	$: formated_mapConfig = {
 		csv_url: map_config.csv_url,
 		fieldNames:
 			map_config.options?.drag_filter?.fieldNames ?? [],
@@ -100,7 +100,7 @@
 <main class="flex max-md:flex-col">
 	<div class="w-2/3">
 		<MapDrag
-			map_config={formated_mapConfig}
+			bind:map_config={formated_mapConfig}
 			on:query_results={handleQueryResults}
 		/>
 	</div>

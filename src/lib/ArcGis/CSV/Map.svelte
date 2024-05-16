@@ -25,6 +25,7 @@
 	import Slider from '@arcgis/core/widgets/Slider'
 
 	export let map_config: DragSearchMapParams
+	$: drag_filter = map_config.options?.drag_filter
 
 	let raio = 1
 	const csvLayer = new CSVLayer({
@@ -123,7 +124,6 @@
 			},
 		})
 
-		const drag_filter = map_config.options?.drag_filter
 		createFeatureTable(view)
 
 		if (!drag_filter) {
