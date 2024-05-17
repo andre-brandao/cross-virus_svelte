@@ -11,7 +11,7 @@
         copied = true;
         setTimeout(() => {
           copied = false;
-        }, 1000);
+        }, 2000);
       }).catch(err => {
         console.error('Failed to copy text:', err);
       });
@@ -19,7 +19,7 @@
   </script>
   
   <button
-    class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-1 rounded text-nowrap w-fit"
+    class="bg-blue-500 hover:bg-blue-700 text-white font-bold px-2 rounded text-nowrap w-fit"
     on:click={copyText}
   >
     {copied ? 'Copied!' : text}

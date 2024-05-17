@@ -85,10 +85,10 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="dialog rounded-lg" on:click|stopPropagation bind:this={dialogRef} tabindex="-1">
-      <div class='flex justify-between p-1 bg-slate-300 rounded mb-2'>
-        <span class="font-bold text-lg">{config.title}</span>
-        <button on:click={toggleDialog} class='rounded-full bg-red-300 hover:bg-red-600'>
-          <CircleX />
+      <div class='flex justify-between rounded mb-2'>
+        <span class="font-bold text-xl content-center">{config.title}</span>
+        <button on:click={toggleDialog} class='rounded-full transition ease-in-out hover:bg-gray-300 p-1 m-1'>
+            <CircleX color="#C00000"/>
         </button>
       </div>
       <div>

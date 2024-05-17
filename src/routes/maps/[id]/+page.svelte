@@ -105,7 +105,7 @@
 				/>
 			</div>
 
-			<div class="flex flex-col gap-3">
+			<div class="flex flex-col gap-3 w-1/3">
 				<div class="flex justify-between">
 					<h1 class="text-2xl">Filtros</h1>
 					{#if !is_exemplo_open}
@@ -155,13 +155,15 @@
 						</p>
 					{/each}
 				</div>
-<!-- 				
+				<!-- 				
 				<pre>
 					{JSON.stringify(newChart.sql_filter, null, 2)}
 				</pre> -->
 			</div>
 			{#if is_exemplo_open}
-				<div class="flex flex-col bg-blue-50">
+				<div
+					class="flex flex-col bg-gray-200 p-3 rounded-lg"
+				>
 					<div class=" flex justify-between">
 						<p class="text-2xl">Exemplos de Filtros SQL</p>
 						<button
@@ -232,9 +234,9 @@
 			{/if}
 		</div>
 		<div
-			class="flex flex-row bg-slate-200 p-1 mt-2 rounded"
+			class="flex flex-row bg-gray-200 p-2 mt-2 rounded-lg"
 		>
-			<p class="text-2xl">Campos do CSV</p>
+			<p class="text-2xl p-2">Campos do CSV</p>
 
 			<ul class=" flex flex-row space-x-2 overflow-scroll">
 				{#each map.fields as item, index}
