@@ -94,9 +94,11 @@ export const POST: RequestHandler = async ({
 	const { data: dataset_exists } = await supabase.storage
 		.from('csv_maps')
 		.list(`${municipio.CodMun}/${fileName}`)
-	if (dataset_exists) {
-		console.log(dataset_exists);
+	if (dataset_exists?.length > 0) {
+		console.log('Esse mapa já existe, por favor tente outro nome');
 		
+		console.log(dataset_exists)
+
 		return new Response(
 			'Esse mapa já existe, por favor tente outro nome',
 			{
