@@ -71,7 +71,7 @@ export const POST: RequestHandler = async ({
 	const doenca = form.get('doenca')
 	console.log(form)
 
-	const fileName = `${municipio.nome}_${doenca}_${ano}.csv`
+	const fileName = `${doenca}_${ano}.csv`
 
 	if (
 		!(csv instanceof File) ||
