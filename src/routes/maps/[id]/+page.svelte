@@ -135,6 +135,7 @@
 						newChart.chart.data.labels?.push(new_label)
 						newChart = newChart
 						newChart.sql_filter.push({
+							label: query_string,
 							onStatisticField: `CASE WHEN ${query_string} THEN 1 ELSE 0 END`,
 							outStatisticFieldName:
 								'id_grafico' + '_' + query.length,
@@ -147,9 +148,17 @@
 					}}>+</button
 				>
 
+				<div>
+					{#each newChart.sql_filter as filter}
+						<p>
+							{filter.label}
+						</p>
+					{/each}
+				</div>
+<!-- 				
 				<pre>
 					{JSON.stringify(newChart.sql_filter, null, 2)}
-				</pre>
+				</pre> -->
 			</div>
 			{#if is_exemplo_open}
 				<div class="flex flex-col bg-blue-50">
