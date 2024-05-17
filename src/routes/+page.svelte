@@ -78,7 +78,7 @@
 						{municipio?.CodMun}
 					</p>
 					<p class="pb-3">
-						<strong>População estimada:</strong>
+						<strong>População estimada(2021): </strong>
 						{municipio?.pop_est}
 					</p>
 					<p class="pb-3">
