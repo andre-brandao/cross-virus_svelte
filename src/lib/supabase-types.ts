@@ -12,7 +12,6 @@ export type Database = {
       csv_dataset: {
         Row: {
           ano: number
-          center: Json | null
           CodMun: number
           created_at: string
           created_by: string
@@ -21,11 +20,12 @@ export type Database = {
           endereco: string
           fields: string[]
           id: number
+          lat: number
+          long: number
           title: string
         }
         Insert: {
           ano?: number
-          center?: Json | null
           CodMun: number
           created_at?: string
           created_by?: string
@@ -34,11 +34,12 @@ export type Database = {
           endereco?: string
           fields: string[]
           id?: number
+          lat?: number
+          long?: number
           title: string
         }
         Update: {
           ano?: number
-          center?: Json | null
           CodMun?: number
           created_at?: string
           created_by?: string
@@ -47,6 +48,8 @@ export type Database = {
           endereco?: string
           fields?: string[]
           id?: number
+          lat?: number
+          long?: number
           title?: string
         }
         Relationships: [
@@ -56,6 +59,35 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "municipios"
             referencedColumns: ["CodMun"]
+          },
+        ]
+      }
+      graficos: {
+        Row: {
+          created_at: string
+          dataset_id: number
+          id: number
+          json: Json
+        }
+        Insert: {
+          created_at?: string
+          dataset_id: number
+          id?: number
+          json: Json
+        }
+        Update: {
+          created_at?: string
+          dataset_id?: number
+          id?: number
+          json?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "graficos_dataset_id_fkey"
+            columns: ["dataset_id"]
+            isOneToOne: false
+            referencedRelation: "csv_dataset"
+            referencedColumns: ["id"]
           },
         ]
       }

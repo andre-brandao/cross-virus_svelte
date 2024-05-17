@@ -1,13 +1,12 @@
 <script>
   import { SidebarClose, CircleX } from "lucide-svelte";
   import { onMount, onDestroy } from 'svelte';
-
   let isOpen = false;
   /**
 	 * @type {HTMLDivElement}
 	 */
   let dialogRef;
-  
+
   export let config = {
     title: 'Modal Title Placeholder',
     openButtonText: 'Open Modal',
@@ -76,7 +75,8 @@
   }
 </style>
 
-<button on:click={toggleDialog} class="bg-blue-200 p-1 m-1" >{config.openButtonText}</button>
+<button on:click={toggleDialog} 	class="group flex justify-center items-center text-center rounded-md p-2 transition ease-in-out bg-secondary text-white hover:text-black hover:bg-primary hover:shadow-md hover:shadow-primary px-5"
+>{config.openButtonText}</button>
 
 {#if isOpen}
   <!-- svelte-ignore a11y-no-static-element-interactions -->
@@ -85,8 +85,8 @@
     <!-- svelte-ignore a11y-click-events-have-key-events -->
     <!-- svelte-ignore a11y-no-static-element-interactions -->
     <div class="dialog rounded-lg" on:click|stopPropagation bind:this={dialogRef} tabindex="-1">
-      <div class='flex justify-between p-1 bg-slate-300'>
-        <span>{config.title}</span>
+      <div class='flex justify-between p-1 bg-slate-300 rounded mb-2'>
+        <span class="font-bold text-lg">{config.title}</span>
         <button on:click={toggleDialog} class='rounded-full bg-red-300 hover:bg-red-600'>
           <CircleX />
         </button>
