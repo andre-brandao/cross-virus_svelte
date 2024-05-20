@@ -45,10 +45,24 @@
 					{municipios?.nome} - {municipios?.UF} ({municipios?.CodMun})
 				</h1>
 				<p class="text-center">{info.email}</p>
-				<p>
-					Geopoints utilzados: {info.geopoints_utilizados} /
-					{info.limite_geopoints}
-				</p>
+				<div class="text-center flex flex-col">
+					<p>Geopoints utilzados:</p>
+					
+					<code class="bg-primary rounded p-1">
+						{info.geopoints_utilizados} /
+						{info.limite_geopoints}
+					</code>
+					<!-- Preciso de mais geopoints no crossvirus -->
+					<a
+						href="https://wa.me/5531983861852?text={encodeURIComponent(
+							'Preciso de comprar mais geopoints no crossvirus',
+						)}"
+						class="hover:underline text-secondary mt-2"
+					>
+						Comprar mais geopoints
+					</a>
+				</div>
+
 				<form class="space-y-4 md:space-y-6" method="post">
 					<div>
 						<label

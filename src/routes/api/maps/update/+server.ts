@@ -41,8 +41,33 @@ export const POST: RequestHandler = async ({
 		})
 	}
 
+	if (!user?.id) {
+		return new Response('Erro ao obter user ID', {
+			status: 404,
+		})
+	}
+
+	const { data: user_limit, error: err_user_limit } =
+		await supabase
+			.from('info_user')
+			.select('*')
+			.eq('auth_id', user.id)
+			.single()
+
+	if (err_user_limit) {
+		console.error(err_user_limit)
+		return new Response(
+			'Erro ao obter informações do usuário, contacte suporte crossvirus!',
+			{ status: 404 },
+		)
+	}
+
+	const limite_geopoints = user_limit?.limite_geopoints
+
+	let used_geopoints = user_limit?.geopoints_utilizados ?? 0
+
 	const addressField = map.endereco
-	const fileName = map.title
+	const fileName = `${map.doenca}_${map.ano}.csv`
 
 	const csvContent = await file.text()
 	const novo_csv_parsed = parse(csvContent, {
@@ -65,6 +90,24 @@ export const POST: RequestHandler = async ({
 			console.log(address)
 			try {
 				const location = await geocodeAddress(address)
+				used_geopoints++
+				if (used_geopoints > limite_geopoints) {
+					const { error: err_info_up } = await supabase
+						.from('info_user')
+						.update({
+							geopoints_utilizados: used_geopoints,
+						})
+						.eq('auth_id', user.id)
+					if (err_info_up) {
+						console.error(err_info_up.message)
+					}
+
+					return new Response(
+						'Limite de geopoints atingido, por favor entre em contato com suporte crossvirus',
+						{ status: 402 },
+					)
+				}
+
 				novo_csv_record['latitude'] = location?.lat ?? null
 				novo_csv_record['longitude'] = location?.lng ?? null
 			} catch (e) {
@@ -75,6 +118,13 @@ export const POST: RequestHandler = async ({
 			}
 		}
 	}
+
+	await supabase
+		.from('info_user')
+		.update({
+			geopoints_utilizados: used_geopoints,
+		})
+		.eq('auth_id', user.id)
 
 	const velho_csv_url = map.csv_url
 	const velho_csv_req = await fetch(velho_csv_url)
@@ -93,12 +143,7 @@ export const POST: RequestHandler = async ({
 	if (users_to_notify) {
 		const user_to_notify_map: {
 			[key: string]: {
-				enderecos_novos: {
-					endereco: string
-					lat: string
-					long: string
-				}[]
-				enderecos_velhos: {
+				enderecos: {
 					endereco: string
 					lat: string
 					long: string
@@ -125,9 +170,12 @@ export const POST: RequestHandler = async ({
 						user.raio_alerta &&
 						distance <= user.raio_alerta
 					) {
-						user_to_notify_map[
-							user.email
-						].enderecos_novos.push({
+						if (!user_to_notify_map[user.email]) {
+							user_to_notify_map[user.email] = {
+								enderecos: [],
+							}
+						}
+						user_to_notify_map[user.email].enderecos.push({
 							endereco: novo_csv_record2[addressField],
 							lat: novo_csv_record2['latitude'],
 							long: novo_csv_record2['longitude'],
@@ -152,9 +200,12 @@ export const POST: RequestHandler = async ({
 						user.raio_alerta &&
 						distance <= user.raio_alerta
 					) {
-						user_to_notify_map[
-							user.email
-						].enderecos_novos.push({
+						if (!user_to_notify_map[user.email]) {
+							user_to_notify_map[user.email] = {
+								enderecos: [],
+							}
+						}
+						user_to_notify_map[user.email].enderecos.push({
 							endereco: velho_csv_record[addressField],
 							lat: velho_csv_record['latitude'],
 							long: velho_csv_record['longitude'],
@@ -167,27 +218,25 @@ export const POST: RequestHandler = async ({
 		for (const not of Object.keys(user_to_notify_map)) {
 			const user = user_to_notify_map[not]
 			const email = not
-			const enderecos = user.enderecos_novos
+			const enderecos = user.enderecos
 			console.log('Enviando email para ', email)
-			const { ok } = await sendEmail(email, {
+			sendEmail(email, {
 				enderecos,
 				municipio: map.title,
 				map_link: 'https://prefeitura.crossvirus.com.br',
 			})
-			if (!ok) {
-				console.log('Erro ao enviar email para ', email)
-			}
 		}
 
 		console.log('Emails enviados com sucesso!')
 	}
 
-	for (const novo_csv_record of novo_csv_parsed) {
-		velho_csv_parsed.push(novo_csv_record)
-	}
-	console.log('CSVs merged ', addressField)
+	//  concat velho_csv_parsed com novo_csv_parsed
 
-	const novoCSVContent = stringify(velho_csv_parsed, {
+	const concat_csv =
+		velho_csv_parsed.concat(novo_csv_parsed)
+	console.log('concat_csv')
+	console.log(concat_csv)
+	const novoCSVContent = stringify(concat_csv, {
 		header: true,
 		columns: Object.keys(velho_csv_parsed[0]),
 	})

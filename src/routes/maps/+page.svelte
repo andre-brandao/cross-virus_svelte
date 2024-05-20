@@ -9,7 +9,7 @@
 </script>
 
 <main
-	class="flex flex-col justify-center items-center bg-gray-100 md:h-[90vh]"
+	class="flex flex-col justify-center items-center bg-gray-100 min-h-full p-4"
 >
 	<div class="grid gap-3 grid-cols-2 max-md:grid-cols-1">
 		{#each maps as mapa}

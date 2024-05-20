@@ -14,9 +14,9 @@ export const POST: RequestHandler = async ({
 }) => {
 	const supabase = locals.supabase
 
-	const {
-		data: { session },
-	} = await supabase.auth.getSession()
+
+	const { user, session } = await locals.safeGetSession()
+
 
 	const CodMun = session?.user?.user_metadata.municipio
 	const userID = session?.user.id
@@ -94,9 +94,14 @@ export const POST: RequestHandler = async ({
 	const { data: dataset_exists } = await supabase.storage
 		.from('csv_maps')
 		.list(`${municipio.CodMun}/${fileName}`)
-	if (dataset_exists?.length > 0) {
-		console.log('Esse mapa já existe, por favor tente outro nome');
-		
+	if (
+		dataset_exists?.length &&
+		dataset_exists?.length > 0
+	) {
+		console.log(
+			'Esse mapa já existe, por favor tente outro nome',
+		)
+
 		console.log(dataset_exists)
 
 		return new Response(
@@ -143,6 +148,7 @@ export const POST: RequestHandler = async ({
 						.update({
 							geopoints_utilizados: used_geopoints,
 						})
+						.eq('auth_id', userID)
 					if (err_info_up) {
 						console.error(err_info_up.message)
 					}
@@ -166,7 +172,7 @@ export const POST: RequestHandler = async ({
 
 	await supabase.from('info_user').update({
 		geopoints_utilizados: used_geopoints,
-	})
+	}).eq('auth_id', userID)
 
 	console.log('geocodificacao COMPLETA')
 
@@ -229,14 +235,12 @@ export const POST: RequestHandler = async ({
 			const email = not
 			const enderecos = user.enderecos_novos
 			console.log('Enviando email para ', email)
-			const { ok } = await sendEmail(email, {
+			sendEmail(email, {
 				enderecos,
 				municipio: municipio.nome,
 				map_link: 'https://prefeitura.crossvirus.com.br',
 			})
-			if (!ok) {
-				console.log('Erro ao enviar email para ', email)
-			}
+		
 		}
 
 		console.log('Emails enviados com sucesso!')
@@ -252,6 +256,9 @@ export const POST: RequestHandler = async ({
 			.upload(
 				`${municipio.CodMun}/${fileName}`,
 				updatedCsvContent,
+				{
+					upsert: true,
+				}
 			)
 
 	if (error_csv) {
