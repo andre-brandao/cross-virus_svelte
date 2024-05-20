@@ -13,27 +13,12 @@
 >
 	<div class="grid gap-3 grid-cols-2 max-md:grid-cols-1">
 		{#each maps as mapa}
-			<div
-				class="flex justify-between p-2 px-5 rounded bg-white w-full items-center"
+			<a
+				href="maps/{mapa.id}"
+				class="grow justify-center text-lg px-11 py-4 bg-white rounded-lg shadow-sm w-full max-md:px-5 hover:shadow-xl transition ease-in-out"
 			>
 				{mapa.title}
-				<div class="ml-1 flex gap-2">
-					<a
-						href="maps/update/{mapa.id}"
-						title="Adicionar dados ao mapa"
-						class="hover:bg-secondary hover:text-white transition ease-in-out p-2 rounded-full"
-					>
-						<FolderPlus />
-					</a>
-					<a
-						href="maps/{mapa.id}"
-						title="Visualizar o mapa"
-						class="hover:bg-secondary hover:text-white transition ease-in-out p-2 rounded-full"
-					>
-						<MapPinned /></a
-					>
-				</div>
-			</div>
+			</a>
 		{/each}
 	</div>
 
