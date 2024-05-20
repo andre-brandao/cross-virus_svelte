@@ -55,6 +55,15 @@
 		window.location.reload()
 	}
 	
+
+	let isOpen = false;
+
+	function toggleNavbar() {
+		const navbar = document.getElementById('navbar-default')
+		if (!navbar) return
+		navbar.style.display = isOpen ? 'none' : 'block'
+		isOpen = !isOpen;
+	}
 </script>
 
 <nav class="bg-white p-2 m-2">
@@ -73,7 +82,7 @@
 				{/if}
 
 				<p
-					class="flex justify-center p-2 px-4 rounded-md items-center bg-gray-200"
+					class="flex justify-center p-2 px-4 rounded-md items-center"
 				>
 					Central Crossvirus de&nbsp<span
 						class="text-secondary font-bold"
@@ -96,23 +105,42 @@
 			class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg xl:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
 			aria-controls="navbar-default"
 			aria-expanded="false"
+			on:click={toggleNavbar}
 		>
-			<span class="sr-only">Open main menu</span>
+
+		{#if isOpen}
 			<svg
-				class="w-5 h-5"
-				aria-hidden="true"
 				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6"
 				fill="none"
-				viewBox="0 0 17 14"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
 			>
 				<path
-					stroke="currentColor"
 					stroke-linecap="round"
 					stroke-linejoin="round"
 					stroke-width="2"
-					d="M1 1h15M1 7h15M1 13h15"
+					d="M6 18L18 6M6 6l12 12"
 				/>
 			</svg>
+		{:else}
+
+			
+			<svg
+				xmlns="http://www.w3.org/2000/svg"
+				class="h-6 w-6"
+				fill="none"
+				viewBox="0 0 24 24"
+				stroke="currentColor"
+			>
+				<path
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					stroke-width="2"
+					d="M4 6h16M4 12h16m-7 6h7"
+				/>
+			</svg>
+		{/if}
 		</button>
 		<div
 			class="hidden w-full xl:block xl:w-auto"
