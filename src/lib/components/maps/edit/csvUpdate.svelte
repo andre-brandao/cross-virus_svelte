@@ -87,6 +87,9 @@
 		if (response.ok) {
 			goto(`/maps/${map.id}`)
 			console.log('Resultado da Geocodificação:', result)
+			setTimeout(() => {
+				window.location.reload()
+			}, 3000)
 		} else {
 			if (response.status === 402) {
 				geoPointsEsgotados = true
@@ -96,7 +99,6 @@
 		}
 		isUploading = false
 
-		isUploading = false
 	}
 </script>
 
@@ -174,15 +176,17 @@
 				<code class="bg-primary p-1 rounded">
 					{#each map.fields as item}
 						<span>
-							{item},
+							{item} |
 						</span>
 					{/each}
 				</code>
 			</div>
 
-			<div class="mb-3">
-				** Campo endereco: {map.endereco}
-			</div>
+			<p class="text-gray-500 mb-3">
+				Atenção: Ao atualizar os dados de uma tabela, o mapa
+				pode demorar alguns minutos para atualizar,
+				verifique a quantidade de casos antes de atualizar.
+			</p>
 			{#if erros}
 				<code class="bg-secondary text-white p-1 rounded">
 					Erros: {erros}

@@ -223,7 +223,7 @@ export const POST: RequestHandler = async ({
 			sendEmail(email, {
 				enderecos,
 				municipio: map.title,
-				map_link: 'https://prefeitura.crossvirus.com.br',
+				map_link: 'https://prefeitura.crossvirus.com.br/maps/' + map.id,
 			})
 		}
 
@@ -234,8 +234,6 @@ export const POST: RequestHandler = async ({
 
 	const concat_csv =
 		velho_csv_parsed.concat(novo_csv_parsed)
-	console.log('concat_csv')
-	console.log(concat_csv)
 	const novoCSVContent = stringify(concat_csv, {
 		header: true,
 		columns: Object.keys(velho_csv_parsed[0]),
@@ -245,7 +243,7 @@ export const POST: RequestHandler = async ({
 	console.log('salvando updated csv')
 	console.log(formatedName)
 
-	console.log(novoCSVContent)
+	// console.log(novoCSVContent)
 	const { data: storage_data, error: error_csv } =
 		await supabase.storage
 			.from('csv_maps')

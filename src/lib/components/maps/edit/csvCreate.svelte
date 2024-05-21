@@ -219,6 +219,10 @@
 				>
 			</form>
 
+			<p class="text-gray-500 mb-3">
+				Atenção: Recomendamos formatar o arquivo CSV sem caracteres especiais e sem espaços nos nomes das colunas. Para melhor compatibilidade com o sistema.
+			</p>
+
 			{#if erros}
 				<code class="bg-secondary text-white p-1 rounded">
 					{erros}

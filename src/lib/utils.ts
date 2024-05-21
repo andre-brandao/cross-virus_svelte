@@ -6,6 +6,7 @@ import {
 
 import { Client } from '@googlemaps/google-maps-services-js'
 const maps_client = new Client({})
+
 export async function geocodeAddress(address: string) {
 	console.log('Geocodificando' + address)
 	try {
@@ -101,7 +102,7 @@ export function getDistanceFromLatLonInKm(
 	position1: { lat: number; lon: number },
 	position2: { lat: number; lon: number },
 ) {
-	var deg2rad =  (deg: number) => {
+	var deg2rad = (deg: number) => {
 			return deg * (Math.PI / 180)
 		},
 		R = 6371,
@@ -117,77 +118,55 @@ export function getDistanceFromLatLonInKm(
 	return R * c * 1000
 }
 export function formatEmail(email: {
-	municipio: string
-	enderecos: {
-		endereco: string
-		lat: string
-		long: string
-	}[]
-	map_link: string
+    municipio: string;
+    enderecos: {
+        endereco: string;
+        lat: string;
+        long: string;
+    }[];
+    map_link: string;
 }) {
-	return `
+    const staticMapsBaseUrl = 'https://maps.googleapis.com/maps/api/staticmap';
+    const interactableBaseUrl = 'https://www.google.com/maps/embed/v1/view';
+    const markers = email.enderecos
+        .map((end) => `${end.lat},${end.long}`)
+        .join('|');
+    const staticMapUrl = `${staticMapsBaseUrl}?size=600x400&maptype=roadmap&markers=color:red|${encodeURIComponent(markers)}&key=${GOOGLE_MAPS_KEY}`;
+    const firstMarker = email.enderecos[0];
+    const interactableMapsUrl = `${interactableBaseUrl}?key=${GOOGLE_MAPS_KEY}&center=${firstMarker.lat},${firstMarker.long}&zoom=15`;
+    return `
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alerta de Email</title>
-	<style>
-      body {
-        margin: 0;
-        padding: 0;
-        background-color: #ffffff;
-      }
-
-      .container {
-        max-width: 600px;
-        margin: 20px auto;
-        padding: 20px;
-        background-color: #f4f4f4;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      }
-
-      h1 {
-        color: #333;
-        text-align: center;
-      }
-
-      h3 {
-        color: #666;
-      }
-
-      ul {
-        padding-left: 20px;
-      }
-
-      li {
-        margin-bottom: 5px;
-        color: #888;
-      }
-    </style>
-	</head>
-	<body>
-	<div class="container">
-	<h1>Alerta <span style="color: #c00000;">Crossvirus</span></h1>
-	<h3 style="text-align: center;">Foram encontrados novos casos em <span style="color: #FFA500;">${email.municipio}</span></h3>
-	  <ul>
-	${email.enderecos.map((e) => {
-		return `
-		<li>  
-		${e.endereco}
-		</li>
-		`
-	})}
-	</ul>
-		<h3>
-        Caso tenha alguma duvida entre em contato com nossa equipe!
-      </h3>
-	  <h3>
-		<a href="${email.map_link}">Clique aqui para visualizar no mapa</a>
-		</h3>
-	  </div>
-  </body>
-  </html>
-	`
+</head>
+<body style="margin: 0; padding: 0; background-color: #ffffff;">
+    <div style="max-width: 600px; margin: 20px auto; padding: 20px; background-color: #f4f4f4; border-radius: 8px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);">
+        <h1 style="color: #333; text-align: center;">Alerta <span style="color: #c00000;">Crossvirus</span></h1>
+        <h3 style="color: #666; text-align: center;">Foram encontrados novos casos em <span style="color: #FFA500;">${email.municipio}</span></h3>
+        <img src="${staticMapUrl}" alt="Mapa com marcadores" style="width: 100%; height: auto; border-radius: 8px; margin: 20px 0;">
+        <a href="${interactableMapsUrl}" target="_blank" style="display: block; margin: 20px 0; text-align: center; color: #007BFF; text-decoration: none;">Visualizar no Google Maps</a>
+        <h3 style="color: #666;">Caso tenha alguma dúvida, entre em contato com nossa equipe!</h3>
+        <h3><a href="${email.map_link}" target="_blank" style="color: #007BFF; text-decoration: none;">Clique aqui para visualizar o mapa no CrossVirus</a></h3>
+    </div>
+</body>
+</html>
+    `;
 }
+
+
+// <gmp-map
+// center="${email.enderecos[0].lat},${email.enderecos[0].long}"
+// zoom="4"
+// map-id="DEMO_MAP_ID"
+// style="height: 400px"
+// >
+// ${email.enderecos.slice(0,5).map((e) => {
+//   return `<gmp-advanced-marker
+//   position="${e.lat},${e.long}"
+//   title="${e.endereco}">
+//   </gmp-advanced-marker>`
+// })}
+// </gmp-map>

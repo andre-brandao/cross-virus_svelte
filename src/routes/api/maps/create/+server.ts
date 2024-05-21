@@ -238,7 +238,7 @@ export const POST: RequestHandler = async ({
 			sendEmail(email, {
 				enderecos,
 				municipio: municipio.nome,
-				map_link: 'https://prefeitura.crossvirus.com.br',
+				map_link: 'https://prefeitura.crossvirus.com.br/maps',
 			})
 		
 		}
