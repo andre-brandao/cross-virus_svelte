@@ -118,23 +118,27 @@ export function getDistanceFromLatLonInKm(
 	return R * c * 1000
 }
 export function formatEmail(email: {
-    municipio: string;
-    enderecos: {
-        endereco: string;
-        lat: string;
-        long: string;
-    }[];
-    map_link: string;
+	municipio: string
+	enderecos: {
+		endereco: string
+		lat: string
+		long: string
+	}[]
+	map_link: string
 }) {
-    const staticMapsBaseUrl = 'https://maps.googleapis.com/maps/api/staticmap';
-    const interactableBaseUrl = 'https://www.google.com/maps/embed/v1/view';
-    const markers = email.enderecos
-        .map((end) => `${end.lat},${end.long}`)
-        .join('|');
-    const staticMapUrl = `${staticMapsBaseUrl}?size=600x400&maptype=roadmap&markers=color:red|${encodeURIComponent(markers)}&key=${GOOGLE_MAPS_KEY}`;
-    const firstMarker = email.enderecos[0];
-    const interactableMapsUrl = `${interactableBaseUrl}?key=${GOOGLE_MAPS_KEY}&center=${firstMarker.lat},${firstMarker.long}&zoom=15`;
-    return `
+	const staticMapsBaseUrl =
+		'https://maps.googleapis.com/maps/api/staticmap'
+	const markerBaseUrl =
+		'https://www.google.com/maps/dir/?api=1&travelmode=driving&destination='
+
+	const enderecos = email.enderecos
+
+	const markers = enderecos
+		.map((end) => `${end.lat},${end.long}`)
+		.join('|')
+	const staticMapUrl = `${staticMapsBaseUrl}?size=600x400&maptype=roadmap&markers=color:red|${encodeURIComponent(markers)}&key=${GOOGLE_MAPS_KEY}`
+
+	return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -147,15 +151,26 @@ export function formatEmail(email: {
         <h1 style="color: #333; text-align: center;">Alerta <span style="color: #c00000;">Crossvirus</span></h1>
         <h3 style="color: #666; text-align: center;">Foram encontrados novos casos em <span style="color: #FFA500;">${email.municipio}</span></h3>
         <img src="${staticMapUrl}" alt="Mapa com marcadores" style="width: 100%; height: auto; border-radius: 8px; margin: 20px 0;">
-        <a href="${interactableMapsUrl}" target="_blank" style="display: block; margin: 20px 0; text-align: center; color: #007BFF; text-decoration: none;">Visualizar no Google Maps</a>
         <h3 style="color: #666;">Caso tenha alguma dúvida, entre em contato com nossa equipe!</h3>
         <h3><a href="${email.map_link}" target="_blank" style="color: #007BFF; text-decoration: none;">Clique aqui para visualizar o mapa no CrossVirus</a></h3>
+		<details style="margin: 20px 0;">
+		<summary style="cursor: pointer; text-align: center; color: #007BFF;">Endereços dos novos casos</summary>
+		${enderecos
+			.map((e) => {
+				const end_url = `${markerBaseUrl}${e.lat},${e.long}`
+				return `
+			<a href="${end_url}" target="_blank" style="display: block; margin: 10px 0; text-align: center; color: #007BFF; text-decoration: none;">
+				${e.endereco}
+			</a>
+			`
+			})
+			.join('')}
+	</details>
     </div>
 </body>
 </html>
-    `;
+    `
 }
-
 
 // <gmp-map
 // center="${email.enderecos[0].lat},${email.enderecos[0].long}"
