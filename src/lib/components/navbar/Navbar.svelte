@@ -54,60 +54,28 @@
 		}
 		window.location.reload()
 	}
-	
 
-	let isOpen = false;
+	let isOpen = false
 
 	function toggleNavbar() {
 		const navbar = document.getElementById('navbar-default')
 		if (!navbar) return
 		navbar.style.display = isOpen ? 'none' : 'block'
-		isOpen = !isOpen;
+		isOpen = !isOpen
 	}
 </script>
 
-<nav class="bg-white p-2 m-2">
-	<div class=" flex flex-wrap items-center justify-between">
-		<div
-			class=" max-xl:flex-col hidden w-full xl:block xl:w-auto"
-			id="navbar-default"
-		>
-			<div class="flex gap-2">
-				{#if itens.length > 0}
-					<NavButton
-						href={itens[0].href}
-						label={itens[0].label}
-						Icon={itens[0].icon}
-					/>
-				{/if}
-
-				<p
-					class="flex justify-center p-2 px-4 rounded-md items-center"
-				>
-					Central Crossvirus de&nbsp<span
-						class="text-secondary font-bold"
-						>{municipio?.nome}</span
-					>
-				</p>
-
-				{#each itens.slice(1) as item}
-					<NavButton
-						href={item.href}
-						label={item.label}
-						Icon={item.icon}
-					/>
-				{/each}
-			</div>
-		</div>
-		<button
-			data-collapse-toggle="navbar-default"
-			type="button"
-			class="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg xl:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
-			aria-controls="navbar-default"
-			aria-expanded="false"
-			on:click={toggleNavbar}
-		>
-
+<nav
+	class="bg-white p-2 m-2 flex-wrap items-center justify-between"
+>
+	<button
+		data-collapse-toggle="navbar-default"
+		type="button"
+		class="inline-flex items-center p-2 w-10 h-10 mb-2 justify-center text-sm text-gray-500 rounded-lg xl:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+		aria-controls="navbar-default"
+		aria-expanded="false"
+		on:click={toggleNavbar}
+	>
 		{#if isOpen}
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
@@ -124,8 +92,6 @@
 				/>
 			</svg>
 		{:else}
-
-			
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				class="h-6 w-6"
@@ -141,15 +107,33 @@
 				/>
 			</svg>
 		{/if}
-		</button>
-		<div
-			class="hidden w-full xl:block xl:w-auto"
-			id="navbar-default"
-		>
-			<ul
-				class="font-medium flex flex-col p-4 xl:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 xl:flex-row xl:space-x-8 rtl:space-x-reverse xl:mt-0 xl:border-0 xl:bg-white"
-			>
-				<div class="flex gap-2">
+	</button>
+	<div
+		id="navbar-default"
+		class="max-xl:flex-col hidden w-full xl:block xl:w-auto"
+	>
+		<div class="flex justify-between lg:flex-row flex-col">
+			<div>
+				<div class="flex flex-col lg:flex-row gap-2">
+					{#each itens as item}
+						<NavButton
+							href={item.href}
+							label={item.label}
+							Icon={item.icon}
+						/>
+					{/each}
+					<p
+						class="flex justify-center p-2 rounded-md items-center"
+					>
+						Central Crossvirus de&nbsp<span
+							class="text-secondary font-bold"
+							>{municipio?.nome}</span
+						>
+					</p>
+				</div>
+			</div>
+			<div>
+				<div class="flex flex-col lg:flex-row gap-2">
 					<NavButton
 						href="/editprofile"
 						label="Editar perfil"
@@ -160,7 +144,7 @@
 						<NavButton label={user?.email} Icon={LogOut} />
 					</button>
 				</div>
-			</ul>
+			</div>
 		</div>
 	</div>
 </nav>
