@@ -47,8 +47,8 @@
 				<p class="text-center">{info.email}</p>
 				<div class="text-center flex flex-col">
 					<p>Geopoints utilzados:</p>
-					
-					<code class="bg-primary rounded p-1">
+
+					<code class=" rounded p-1 bg-gray-100">
 						{info.geopoints_utilizados} /
 						{info.limite_geopoints}
 					</code>
@@ -57,7 +57,7 @@
 						href="https://wa.me/5531983861852?text={encodeURIComponent(
 							'Preciso de comprar mais geopoints no crossvirus',
 						)}"
-						class="hover:underline text-secondary mt-2"
+						class="hover:underline bg-primary text-secondary hover:bg-secondary hover:text-primary p-3 mt-2"
 					>
 						Comprar mais geopoints
 					</a>
