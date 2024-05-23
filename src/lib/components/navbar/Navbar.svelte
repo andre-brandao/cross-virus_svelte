@@ -34,7 +34,7 @@
 		{ label: 'Mapas', href: '/maps', icon: Map },
 		{
 			label: 'Mapas públicos',
-			href: 'https://crossvirus.com.br/maps',
+			href: '/maps/public',
 			icon: MapPinned,
 		},
 	]
