@@ -18,6 +18,10 @@
 		ChartFiltered,
 		LayerFilter,
 	} from './types.ts'
+	import ModalEditGrafico from '$lib/ModalEditGrafico.svelte'
+	import { CircleX } from 'lucide-svelte'
+	import { createEventDispatcher } from 'svelte'
+	const dispatch = createEventDispatcher()
 
 	export let map_config: MapWrapperParams
 
@@ -37,7 +41,7 @@
 		},
 	}
 
-	let chartConfigs: ChartFiltered[] = map_config.charts
+	$: chartConfigs = map_config.charts
 
 	let chartsRef: Chart[] = []
 
@@ -95,6 +99,21 @@
 			updateChart(chartsRef[i], data)
 		})
 	}
+
+	function handleModalEvent(
+		index: number,
+		newChart: ChartFiltered,
+	) {
+		console.log('pushing new chart', newChart)
+		map_config.charts[index] = newChart
+		map_config = map_config
+		map_config.charts = map_config.charts
+	}
+
+	$: {
+		console.log('formated_mapCOnfig', formated_mapConfig)
+		console.log('mapConfig', map_config)
+	}
 </script>
 
 <main class="flex max-md:flex-col">
@@ -106,14 +125,31 @@
 	</div>
 
 	<div
-		class="w-1/3 flex flex-wrap justify-center items-center"
+		class="w-1/3 flex flex-wrap justify-center items-center overflow-scroll h-[80vh]"
 	>
 		{#each chartConfigs as chart, i}
 			{@const config = chart.chart}
 			{@const width = chart.size?.width ?? 350}
 			{@const height = chart.size?.height ?? 350}
 
-			<div class="">
+			<div class="relative">
+				<button
+					on:click={() => {
+						if (
+							confirm(
+								'Are you sure you want to delete this chart?',
+							)
+						) {
+							dispatch('deleteChart', {
+								index: i,
+								chart: chart,
+							})
+						}
+					}}
+					class="rounded-full transition ease-in-out hover:bg-gray-300 p-1 m-1"
+				>
+					<CircleX color="#C00000" />
+				</button>
 				<SvChart
 					bind:chart={chartsRef[i]}
 					{config}

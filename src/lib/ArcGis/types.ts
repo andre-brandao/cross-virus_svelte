@@ -5,6 +5,7 @@ import SceneView from "@arcgis/core/views/SceneView.js";
 import type { ChartConfiguration } from "chart.js/auto";
 
 export interface ChartFiltered {
+  id?: string;
   chart: any;
   sql_filter: ArcgisFilter[];
 

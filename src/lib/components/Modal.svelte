@@ -1,7 +1,7 @@
 <script>
   import { SidebarClose, CircleX } from "lucide-svelte";
   import { onMount, onDestroy } from 'svelte';
-  let isOpen = false;
+  export let isOpen = false;
   /**
 	 * @type {HTMLDivElement}
 	 */

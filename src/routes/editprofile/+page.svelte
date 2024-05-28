@@ -57,7 +57,7 @@
 						href="https://wa.me/5531983861852?text={encodeURIComponent(
 							'Preciso de comprar mais geopoints no crossvirus',
 						)}"
-						class="hover:underline bg-primary text-secondary hover:bg-secondary hover:text-primary p-3 mt-2"
+						class="hover:underline rounded  bg-primary text-secondary hover:bg-secondary hover:text-primary p-3 mt-2"
 					>
 						Comprar mais geopoints
 					</a>
