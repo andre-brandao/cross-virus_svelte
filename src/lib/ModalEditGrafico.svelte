@@ -59,7 +59,7 @@
 	let newLabel = ''
 	let queryString = ''
 
-	let is_exemplo_open = true
+	let is_exemplo_open = false
 
 	$: {
 		console.log(isOpen)
@@ -187,8 +187,8 @@
 					</tr>
 				{/each}
 
-				<tfoot>
-					<tr>
+				<tfoot >
+					<tr class="border-2 border-primary p-3 rounded-lg">
 						<td colspan="2">
 							<input
 								class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
