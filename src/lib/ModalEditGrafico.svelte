@@ -96,7 +96,7 @@
 			'Crie um novo grafico para o mapa, usando dados do CSV',
 	}}
 >
-	<div class="flex gap-3 ">
+	<div class="flex gap-3">
 		<div class="flex flex-col w-1/3">
 			<h1 class="text-2xl">Grafico</h1>
 
@@ -146,11 +146,6 @@
 		<div class="flex flex-col gap-3 w-2/3">
 			<div class="flex justify-between">
 				<h1 class="text-2xl">Filtros</h1>
-				{#if !is_exemplo_open}
-					<button on:click={() => (is_exemplo_open = true)}>
-						Ver Exemplos
-					</button>
-				{/if}
 			</div>
 
 			<p>
@@ -160,7 +155,19 @@
 			<table>
 				<tr>
 					<th colspan="2">Label</th>
-					<th colspan="2">SQL</th>
+					<th colspan="2"
+						>
+						SQL
+
+						{#if !is_exemplo_open}
+							<button
+							class="text-sm text-primary hover:text-secondary hover:underline"
+								on:click={() => (is_exemplo_open = true)}
+							>
+								Ver Exemplos
+							</button>
+						{/if}
+					</th>
 				</tr>
 				{#each chartConfig.sql_filter as filter}
 					<tr>
@@ -213,88 +220,59 @@
             {JSON.stringify(newChart.sql_filter, null, 2)}
         </pre> -->
 		</div>
-	
 	</div>
 	<div
 		class="flex flex-row bg-gray-200 p-2 mt-2 rounded-lg"
 	>
-
-	{#if is_exemplo_open}
-	<div class="flex flex-col bg-gray-200 p-3 rounded-lg">
-		<div class=" flex justify-between">
-			<p class="text-2xl">Exemplos de Filtros SQL</p>
-			<button
-				on:click={() => (is_exemplo_open = false)}
-				class="group flex justify-center items-center text-center rounded-md p-2 transition ease-in-out bg-secondary text-white hover:text-black hover:bg-primary hover:shadow-md hover:shadow-primary px-5"
-			>
-				Fechar Exemplos
-			</button>
-		</div>
-		<div class="flex flex-col overflow-scroll p-2">
-			<h2 class="text-xl mt-4">
-				Filtros de Dados Simples
-			</h2>
-			<ul class="flex flex-col space-y-4">
-				<li>
-					<p><b>CAMPO_TEXTO</b> = 'TEXTO'</p>
-					<p class="text-gray-500">
-						Filtrar por campo de texto igual a 'TEXTO'
-					</p>
-				</li>
-				<li>
-					<p>
-						<b>CAMPO_TEXTO</b> LIKE '%PARTE_TEXTO%'
-					</p>
-					<p class="text-gray-500">
-						Filtrar por campo de texto que contenha
-						'PARTE_TEXTO'
-					</p>
-				</li>
-			</ul>
-
-			<h2 class="text-xl mt-4">Filtros de Data</h2>
-			<ul class="flex flex-col space-y-4">
-				<li>
-					<p>
-						EXTRACT(MONTH FROM <b>CAMPO_DATA</b>) = 7
-					</p>
-					<p class="text-gray-500">
-						Filtrar por registros cujo mês no campo de
-						data seja julho
-					</p>
-				</li>
-			</ul>
-
-			<h2 class="text-xl mt-4">Múltiplos Filtros</h2>
-			<ul class="flex flex-col space-y-4">
-				<li>
-					<p>
-						<b>CAMPO_TEXTO</b> = 'TEXTO' AND
-						<b>CAMPO_NUMERICO</b> > 10
-					</p>
-					<p class="text-gray-500">
-						Juntando 2 filtros com operador lógico AND
-					</p>
-				</li>
-				<li>
-					<p>
-						<b>CAMPO_TEXTO</b> = 'TEXTO' OR
-						<b>CAMPO_NUMERICO</b> > 10
-					</p>
-					<p class="text-gray-500">
-						Juntando 2 filtros com operador lógico OR
-					</p>
-				</li>
-			</ul>
-		</div>
-	</div>
-{/if}
-		<p class="text-2xl p-2">Campos do CSV</p>
-
-		<ul class=" flex flex-row space-x-2 overflow-scroll">
-			{#each fields as item, index}
-				<ButtonClipboard text={item} />
-			{/each}
-		</ul>
+		{#if is_exemplo_open}
+			<div class="flex flex-col w-full bg-gray-200 p-3 rounded-lg">
+				<div class="flex justify-between">
+					<p class="text-2xl">Exemplos de Filtros SQL</p>
+					<button
+						on:click={() => (is_exemplo_open = false)}
+						class="group flex justify-center items-center text-center rounded-md p-2 transition ease-in-out bg-secondary text-white hover:text-black hover:bg-primary hover:shadow-md hover:shadow-primary px-5"
+					>
+						Fechar Exemplos
+					</button>
+				</div>
+				<div class="flex flex-col overflow-scroll p-2">
+					<h2 class="text-xl mt-4">Filtros de Dados Simples</h2>
+					<ul class="flex flex-col space-y-4">
+						<li>
+							<p><b>CAMPO_TEXTO</b> = 'TEXTO'</p>
+							<p class="text-gray-500">Filtrar por campo de texto igual a 'TEXTO'</p>
+						</li>
+						<li>
+							<p><b>CAMPO_TEXTO</b> LIKE '%PARTE_TEXTO%'</p>
+							<p class="text-gray-500">Filtrar por campo de texto que contenha 'PARTE_TEXTO'</p>
+						</li>
+					</ul>
+					<h2 class="text-xl mt-4">Filtros de Data</h2>
+					<ul class="flex flex-col space-y-4">
+						<li>
+							<p>EXTRACT(MONTH FROM <b>CAMPO_DATA</b>) = 7</p>
+							<p class="text-gray-500">Filtrar por registros cujo mês no campo de data seja julho</p>
+						</li>
+					</ul>
+					<h2 class="text-xl mt-4">Múltiplos Filtros</h2>
+					<ul class="flex flex-col space-y-4">
+						<li>
+							<p><b>CAMPO_TEXTO</b> = 'TEXTO' AND <b>CAMPO_NUMERICO</b> > 10</p>
+							<p class="text-gray-500">Juntando 2 filtros com operador lógico AND</p>
+						</li>
+						<li>
+							<p><b>CAMPO_TEXTO</b> = 'TEXTO' OR <b>CAMPO_NUMERICO</b> > 10</p>
+							<p class="text-gray-500">Juntando 2 filtros com operador lógico OR</p>
+						</li>
+					</ul>
+				</div>
+				<p class="text-2xl p-2">Campos do CSV</p>
+				<ul class="flex flex-row space-x-2 overflow-scroll">
+					{#each fields as item, index}
+						<ButtonClipboard text={item} />
+					{/each}
+				</ul>
+			</div>
+		{/if}
 	</div>
 </Modal>

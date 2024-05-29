@@ -113,9 +113,9 @@
 		const view = new MapView({
 			container: node,
 			map: map,
-			zoom: 3.3,
+			zoom: map_config.center ? 11 : 3.3,
 			// brazil
-			center: [-55.491977, -10.836584],
+			center: map_config.center ?? [-55.491977, -10.836584],
 			highlightOptions: {
 				// @ts-expect-error green is a valid color
 				color: 'green',
@@ -142,8 +142,6 @@
 
 		// csvLayer.outFields = map_config.fields;
 		layerView = await view.whenLayerView(csvLayer)
-
-
 
 		reactiveUtils
 			.whenOnce(() => !layerView.updating)

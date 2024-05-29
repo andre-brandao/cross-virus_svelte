@@ -14,9 +14,7 @@ export const POST: RequestHandler = async ({
 }) => {
 	const supabase = locals.supabase
 
-
 	const { user, session } = await locals.safeGetSession()
-
 
 	const CodMun = session?.user?.user_metadata.municipio
 	const userID = session?.user.id
@@ -170,9 +168,12 @@ export const POST: RequestHandler = async ({
 		}
 	}
 
-	await supabase.from('info_user').update({
-		geopoints_utilizados: used_geopoints,
-	}).eq('auth_id', userID)
+	await supabase
+		.from('info_user')
+		.update({
+			geopoints_utilizados: used_geopoints,
+		})
+		.eq('auth_id', userID)
 
 	console.log('geocodificacao COMPLETA')
 
@@ -238,9 +239,9 @@ export const POST: RequestHandler = async ({
 			sendEmail(email, {
 				enderecos,
 				municipio: municipio.nome,
-				map_link: 'https://prefeitura.crossvirus.com.br/maps',
+				map_link:
+					'https://prefeitura.crossvirus.com.br/maps',
 			})
-		
 		}
 
 		console.log('Emails enviados com sucesso!')
@@ -258,7 +259,7 @@ export const POST: RequestHandler = async ({
 				updatedCsvContent,
 				{
 					upsert: true,
-				}
+				},
 			)
 
 	if (error_csv) {
@@ -276,6 +277,9 @@ export const POST: RequestHandler = async ({
 		.from('csv_maps')
 		.getPublicUrl(storage_data!.path)
 
+	const lat = records[0]['latitude']
+	const long = records[0]['longitude']
+
 	const { data: dataset_data, error: dataset_error } =
 		await supabase
 			.from('csv_dataset')
@@ -287,6 +291,8 @@ export const POST: RequestHandler = async ({
 				CodMun: municipio.CodMun,
 				ano: Number(ano),
 				doenca: doenca,
+				lat,
+				long,
 			})
 			.select('*')
 

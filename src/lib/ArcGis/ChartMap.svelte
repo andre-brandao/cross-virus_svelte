@@ -29,6 +29,7 @@
 		csv_url: map_config.csv_url,
 		fieldNames:
 			map_config.options?.drag_filter?.fieldNames ?? [],
+		center: map_config.center,
 		options: {
 			drag_filter: {
 				// radius: map_config.options?.drag_filter?.radius ?? 1,

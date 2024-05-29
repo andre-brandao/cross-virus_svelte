@@ -25,6 +25,10 @@
 
 	let mapConfig: MapWrapperParams = {
 		csv_url: map?.csv_url,
+		center: [
+			map?.long ?? -55.491977,
+			map?.lat ?? -10.836584,
+		],
 		charts: [],
 		fieldNames: map?.fields,
 	}
