@@ -107,8 +107,8 @@
 	}
 </script>
 
-<main class="flex max-md:flex-col">
-	<div class="w-2/3">
+<main class="flex flex-col lg:flex-row mb-40 md:mb-0">
+	<div class="lg:w-2/3 w-full">
 		<MapDrag
 			bind:map_config={formated_mapConfig}
 			on:query_results={handleQueryResults}
@@ -116,7 +116,7 @@
 	</div>
 
 	<div
-		class="w-1/3 flex flex-wrap justify-center items-center overflow-scroll h-[80vh]"
+		class="lg:w-1/3 w-full flex flex-wrap justify-center items-center md:overflow-scroll h-[85vh] gap-20"
 	>
 		{#each chartConfigs as chart, i}
 			{@const config = chart.chart}

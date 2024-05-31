@@ -286,9 +286,9 @@
 </script>
 
 <!-- MAIN MAP -->
-<main class="">
+<main class="mb-5 md:mb-0">
 	<div
-		class={'w-full h-[50vh] md:h-[45vh]'}
+		class={'w-full h-[50vh] md:h-[40vh]'}
 		use:csv_map
 		on:query_results
 	></div>
