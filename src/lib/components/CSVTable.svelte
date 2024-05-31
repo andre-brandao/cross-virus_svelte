@@ -46,7 +46,7 @@
 				<tr>
 					{#each headers as header}
 						<th
-							class="px-4 py-2 border bg-gray-400 hover:bg-gray-300 cursor-pointer"
+							class="px-4 py-2 border bg-gray-200 hover:bg-gray-300 cursor-pointer"
 							on:click={() => dispatch('select', header)}
 						>
 							{header}
