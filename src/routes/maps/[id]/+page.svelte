@@ -18,6 +18,7 @@
 
 	import { getCasosFromMapURL } from '$lib/utils_client'
 	import ModalEditGrafico from '$lib/ModalEditGrafico.svelte'
+	import { goto } from '$app/navigation'
 	export let data: PageData
 
 	let { supabase } = data
@@ -33,7 +34,12 @@
 			map?.lat ?? -10.836584,
 		],
 		charts:
-			map.graficos.map((g) => JSON.parse(g.json)) ?? [],
+			map.graficos.map((g) => {
+				return {
+					id:g.id,
+					...JSON.parse(g.json),
+				}
+			}) ?? [],
 		fieldNames: map?.fields,
 	}
 
@@ -116,8 +122,8 @@
 		const chartEventValue = e.detail
 		deleteChart(chartEventValue.chart)
 	}}
+	on:edit={(e) => {
+		const chart = e.detail.chart
+		goto(`/maps/${map.id}/grafico/${chart.id}`)
+	}}
 />
-
-<pre>
-	{JSON.stringify(mapConfig, null, 2)}
-</pre>

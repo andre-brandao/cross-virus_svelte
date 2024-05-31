@@ -19,7 +19,7 @@
 		LayerFilter,
 	} from './types.ts'
 	import ModalEditGrafico from '$lib/ModalEditGrafico.svelte'
-	import { CircleX } from 'lucide-svelte'
+	import { CircleX, PenLine } from 'lucide-svelte'
 	import { createEventDispatcher } from 'svelte'
 	const dispatch = createEventDispatcher()
 
@@ -101,7 +101,6 @@
 		})
 	}
 
-
 	$: {
 		console.log('formated_mapCOnfig', formated_mapConfig)
 		console.log('mapConfig', map_config)
@@ -141,6 +140,18 @@
 					class="rounded-full transition ease-in-out hover:bg-gray-300 p-1 m-1"
 				>
 					<CircleX color="#C00000" />
+				</button>
+
+				<button
+					on:click={() => {
+						dispatch('edit', {
+							index: i,
+							chart: chart,
+						})
+					}}
+					class="rounded-full transition ease-in-out hover:bg-gray-300 p-1 m-1"
+				>
+					<PenLine />
 				</button>
 				<SvChart
 					bind:chart={chartsRef[i]}

@@ -20,6 +20,7 @@
 	import CSVTable from '$lib/components/CSVTable.svelte'
 
 	import { getCasosFromMapURL } from '$lib/utils_client'
+	import { goto } from '$app/navigation'
 
 	const map = data.map
 	const grafico = data.grafico
@@ -30,7 +31,9 @@
 
 	let fields: string[] = map.fields
 
-	export let chartConfig: ChartFiltered = {
+	export let chartConfig: ChartFiltered = grafico ? JSON.parse(
+		grafico?.json,
+	) : {
 		chart: {
 			type: 'bar',
 			data: {
@@ -72,7 +75,27 @@
 
 		if (error) {
 			console.error(error)
+			return
 		}
+		goto(`/maps/${map.id}`)
+	}
+
+	async function updateChart() {
+		if (!grafico?.id) {
+			await createNewChart()
+			return
+		}
+
+		const { error } = await supabase
+			.from('graficos')
+			.update({ json: JSON.stringify(chartConfig) })
+			.eq('id', grafico.id)
+
+		if (error) {
+			console.error(error)
+			return
+		}
+		goto(`/maps/${map.id}`)
 	}
 
 	let newLabel = ''
@@ -147,7 +170,7 @@
 
 		<button
 			class="group flex justify-center items-center text-center rounded-md p-2 transition ease-in-out bg-secondary text-white hover:text-black hover:bg-primary hover:shadow-md hover:shadow-primary px-5"
-			on:click={createNewChart}
+			on:click={updateChart}
 		>
 			Criar Grafico
 		</button>
