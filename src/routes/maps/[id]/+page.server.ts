@@ -8,7 +8,7 @@ export const load = (async ({ locals, params }) => {
 	const { data: map, error: err_csv_dataset } =
 		await supabase
 			.from('csv_dataset')
-			.select('*')
+			.select('*, graficos(*)')
 			.eq('id', mapID)
 			.single()
 	if (err_csv_dataset) {

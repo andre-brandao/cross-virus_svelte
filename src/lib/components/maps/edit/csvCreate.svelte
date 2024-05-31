@@ -1,6 +1,6 @@
-<script>
-	//@ts-nocheck
+<script lang="ts">
 	import { goto } from '$app/navigation'
+	import CSVTable from '$lib/components/CSVTable.svelte'
 
 	export let municipio = {
 		CodMun: 0,
@@ -9,8 +9,10 @@
 		UF: '',
 	}
 
-	let file
-	let parsedData = []
+	let file: File
+	// $: fileUrl = URL.createObjectURL(file) ?? ''
+	let fileUrl = ''
+	let csvHeaders = []
 	let campo_endereco = ''
 	let ano = '2024'
 	let doenca = 'Dengue'
@@ -31,22 +33,11 @@
 		file = event.target.files[0]
 		const reader = new FileReader()
 		reader.onload = (e) => {
-			parseCsv(e.target.result)
+			const result = e.target.result
+			fileUrl = URL.createObjectURL(file)
+			isCarregando = false
 		}
 		reader.readAsText(file)
-	}
-
-	function parseCsv(csvData) {
-		const lines = csvData.split('\n')
-		const headers = lines[0].split(',')
-		parsedData = lines.slice(1).map((line) => {
-			const columns = line.split(',')
-			return headers.reduce((entry, header, index) => {
-				entry[header.trim()] = columns[index]?.trim()
-				return entry
-			}, {})
-		})
-		isCarregando = false
 	}
 
 	let isUploading = false
@@ -192,7 +183,7 @@
 						? 'border-secondary'
 						: ' border-green-400'}"
 				>
-					{#if parsedData.length > 0}
+					{#if csvHeaders.length > 0}
 						<label for="field">Campo Endereço</label>
 						<select
 							class="rounded py-1 px-3 text-black"
@@ -201,7 +192,7 @@
 							bind:value={campo_endereco}
 							required
 						>
-							{#each Object.keys(parsedData[0]) as header}
+							{#each csvHeaders ?? [] as header}
 								<option value={header}>{header}</option>
 							{/each}
 						</select>
@@ -220,7 +211,9 @@
 			</form>
 
 			<p class="text-gray-500 mb-3">
-				Atenção: Recomendamos formatar o arquivo CSV sem caracteres especiais e sem espaços nos nomes das colunas. Para melhor compatibilidade com o sistema.
+				Atenção: Recomendamos formatar o arquivo CSV sem
+				caracteres especiais e sem espaços nos nomes das
+				colunas. Para melhor compatibilidade com o sistema.
 			</p>
 
 			{#if erros}
@@ -230,6 +223,19 @@
 			{/if}
 		</div>
 	</main>
+{/if}
+
+{#if fileUrl}
+	<CSVTable
+		csv_url={fileUrl}
+		on:select={(e) => {
+			const value = e.detail
+			campo_endereco = value
+		}}
+		on:headers={(e) => {
+			csvHeaders = e.detail
+		}}
+	/>
 {/if}
 
 {#if isCarregando}
@@ -262,36 +268,4 @@
 			</div>
 		</div>
 	</div>
-{/if}
-
-{#if parsedData.length > 0}
-	<div
-		class="w-screen overflow-scroll h-[45vh] overflow-y-scroll"
-	>
-		<table class="w-full text-left table-auto">
-			<thead class="bg-gray-200 sticky top-0">
-				<tr>
-					{#each Object.keys(parsedData[0]) as header}
-						<th
-							class="px-4 py-2 border hover:bg-primary cursor-pointer"
-							on:click={() => (campo_endereco = header)}
-							>{header}</th
-						>
-					{/each}
-				</tr>
-			</thead>
-			<tbody>
-				{#each parsedData as row, i (i)}
-					<tr>
-						{#each Object.values(row) as value}
-							<td class="px-4 py-2 border">{value}</td>
-						{/each}
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
-	<p class="text-center font-bold bg-gray-100">
-		Também é possivel clicar no campo do endereço
-	</p>
 {/if}

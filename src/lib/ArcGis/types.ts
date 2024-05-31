@@ -17,6 +17,7 @@ export interface ChartFiltered {
 
 export interface ArcgisFilter {
 	label?: string
+	query?: string
 	onStatisticField: string
 	outStatisticFieldName: string
 	statisticType: string

@@ -1,7 +1,7 @@
 <script>
 	//@ts-nocheck
 	import { goto } from '$app/navigation'
-
+	import CSVTable from '$lib/components/CSVTable.svelte';
 	export let map = {
 		CodMun: 4311343,
 		created_at: 'string',
@@ -13,8 +13,7 @@
 		title: 'string',
 	}
 	let file
-	let parsedData = []
-	let campo_endereco = ''
+	let fileUrl = ''
 
 	$: nome_dataset = map.title
 
@@ -24,7 +23,8 @@
 		file = event.target.files[0]
 		const reader = new FileReader()
 		reader.onload = (e) => {
-			parseCsv(e.target.result)
+			fileUrl = URL.createObjectURL(file)
+			isCarregando = false
 		}
 		reader.readAsText(file)
 	}
@@ -32,34 +32,6 @@
 	let isValidCSV = false
 	let geoPointsEsgotados = false
 	let erros = ''
-
-	function parseCsv(csvData) {
-		const lines = csvData.split('\n')
-		const headers = lines[0].split(',')
-		isValidCSV = true
-		erros = ''
-
-		if (!headers.includes(map.endereco)) {
-			isValidCSV = false
-			erros +=
-				'O arquivo não contém o campo de endereço, ou o campo de endereço não é o mesmo do dataset.'
-		}
-
-		if (erros) {
-			isCarregando = false
-			return
-		} else {
-		}
-
-		parsedData = lines.slice(1).map((line) => {
-			const columns = line.split(',')
-			return headers.reduce((entry, header, index) => {
-				entry[header.trim()] = columns[index]?.trim()
-				return entry
-			}, {})
-		})
-		isCarregando = false
-	}
 
 	let isUploading = false
 	async function onFormSubmit() {
@@ -206,6 +178,13 @@
 	</main>
 {/if}
 
+{#if fileUrl}
+	<CSVTable
+		csv_url={fileUrl}
+	/>
+{/if}
+
+
 {#if isCarregando}
 	<div class="flex items-center justify-center h-full">
 		<div class="p-4">
@@ -236,36 +215,4 @@
 			</div>
 		</div>
 	</div>
-{/if}
-
-{#if parsedData.length > 0}
-	<div
-		class="w-screen overflow-scroll h-[50vh] overflow-y-scroll"
-	>
-		<table class="w-full text-left table-auto">
-			<thead class="bg-gray-200 sticky top-0">
-				<tr>
-					{#each Object.keys(parsedData[0]) as header}
-						<th
-							class="px-4 py-2 border hover:bg-blue-300 cursor-pointer"
-							on:click={() => (campo_endereco = header)}
-							>{header}</th
-						>
-					{/each}
-				</tr>
-			</thead>
-			<tbody>
-				{#each parsedData as row, i (i)}
-					<tr>
-						{#each Object.values(row) as value}
-							<td class="px-4 py-2 border">{value}</td>
-						{/each}
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
-	<p class="text-center font-bold">
-		Também é possivel clicar no campo do endereço
-	</p>
 {/if}

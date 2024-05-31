@@ -101,15 +101,6 @@
 		})
 	}
 
-	function handleModalEvent(
-		index: number,
-		newChart: ChartFiltered,
-	) {
-		console.log('pushing new chart', newChart)
-		map_config.charts[index] = newChart
-		map_config = map_config
-		map_config.charts = map_config.charts
-	}
 
 	$: {
 		console.log('formated_mapCOnfig', formated_mapConfig)

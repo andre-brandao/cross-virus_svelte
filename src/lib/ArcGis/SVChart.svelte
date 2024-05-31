@@ -7,7 +7,6 @@
 	export let id: string = ''
 
 	export let chart: Chart | null = null
-	let canvas: HTMLCanvasElement
 
 	export let width = 400
 	export let height = 400
@@ -21,7 +20,6 @@
 
 <canvas
 	{id}
-	bind:this={canvas}
 	use:mountMap
 	{width}
 	{height}

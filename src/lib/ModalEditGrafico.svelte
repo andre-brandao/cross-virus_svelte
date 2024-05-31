@@ -1,7 +1,10 @@
 <script lang="ts">
 	import Map from '$lib/ArcGis/ChartMap.svelte'
 	import Modal from '$lib/components/Modal.svelte'
-	import type { ArcgisFilter } from '$lib/ArcGis/types'
+	import type {
+		ArcgisFilter,
+		ChartFiltered,
+	} from '$lib/ArcGis/types'
 	import SvChart from '$lib/ArcGis/SVChart.svelte'
 	import { CircleX } from 'lucide-svelte'
 
@@ -21,10 +24,7 @@
 
 	export let fields: string[] = []
 
-	export let chartConfig: {
-		chart: ChartConfiguration
-		sql_filter: ArcgisFilter[]
-	} = {
+	export let chartConfig: ChartFiltered = {
 		chart: {
 			type: 'bar',
 			data: {
@@ -66,10 +66,14 @@
 		console.log(chartConfig)
 	}
 
-	function createQueryFromLabel(label: string) {
+	function createQueryFromLabel(
+		label: string,
+		query: string,
+	) {
 		return {
 			label: label,
-			onStatisticField: `CASE WHEN ${label} THEN 1 ELSE 0 END`,
+			query: query,
+			onStatisticField: `CASE WHEN ${query} THEN 1 ELSE 0 END`,
 			outStatisticFieldName: `id_grafico_${chartConfig.sql_filter.length}`,
 			statisticType: 'sum',
 		}
@@ -79,7 +83,7 @@
 		chartConfig.chart.data.labels?.push(newLabel)
 		chartConfig = chartConfig
 		chartConfig.sql_filter.push(
-			createQueryFromLabel(newLabel),
+			createQueryFromLabel(newLabel, queryString),
 		)
 		chartConfig.chart.data.datasets[0].data.push(
 			Math.floor(Math.random() * 100),
@@ -155,13 +159,12 @@
 			<table>
 				<tr>
 					<th colspan="2">Label</th>
-					<th colspan="2"
-						>
+					<th colspan="2">
 						SQL
 
 						{#if !is_exemplo_open}
 							<button
-							class="text-sm text-primary hover:text-secondary hover:underline"
+								class="text-sm text-primary hover:text-secondary hover:underline"
 								on:click={() => (is_exemplo_open = true)}
 							>
 								Ver Exemplos
@@ -187,8 +190,10 @@
 					</tr>
 				{/each}
 
-				<tfoot >
-					<tr class="border-2 border-primary p-3 rounded-lg">
+				<tfoot>
+					<tr
+						class="border-2 border-primary p-3 rounded-lg"
+					>
 						<td colspan="2">
 							<input
 								class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary focus:border-primary block w-full p-2.5"
@@ -225,7 +230,9 @@
 		class="flex flex-row bg-gray-200 p-2 mt-2 rounded-lg"
 	>
 		{#if is_exemplo_open}
-			<div class="flex flex-col w-full bg-gray-200 p-3 rounded-lg">
+			<div
+				class="flex flex-col w-full bg-gray-200 p-3 rounded-lg"
+			>
 				<div class="flex justify-between">
 					<p class="text-2xl">Exemplos de Filtros SQL</p>
 					<button
@@ -236,33 +243,55 @@
 					</button>
 				</div>
 				<div class="flex flex-col overflow-scroll p-2">
-					<h2 class="text-xl mt-4">Filtros de Dados Simples</h2>
+					<h2 class="text-xl mt-4">
+						Filtros de Dados Simples
+					</h2>
 					<ul class="flex flex-col space-y-4">
 						<li>
 							<p><b>CAMPO_TEXTO</b> = 'TEXTO'</p>
-							<p class="text-gray-500">Filtrar por campo de texto igual a 'TEXTO'</p>
+							<p class="text-gray-500">
+								Filtrar por campo de texto igual a 'TEXTO'
+							</p>
 						</li>
 						<li>
 							<p><b>CAMPO_TEXTO</b> LIKE '%PARTE_TEXTO%'</p>
-							<p class="text-gray-500">Filtrar por campo de texto que contenha 'PARTE_TEXTO'</p>
+							<p class="text-gray-500">
+								Filtrar por campo de texto que contenha
+								'PARTE_TEXTO'
+							</p>
 						</li>
 					</ul>
 					<h2 class="text-xl mt-4">Filtros de Data</h2>
 					<ul class="flex flex-col space-y-4">
 						<li>
-							<p>EXTRACT(MONTH FROM <b>CAMPO_DATA</b>) = 7</p>
-							<p class="text-gray-500">Filtrar por registros cujo mês no campo de data seja julho</p>
+							<p>
+								EXTRACT(MONTH FROM <b>CAMPO_DATA</b>) = 7
+							</p>
+							<p class="text-gray-500">
+								Filtrar por registros cujo mês no campo de
+								data seja julho
+							</p>
 						</li>
 					</ul>
 					<h2 class="text-xl mt-4">Múltiplos Filtros</h2>
 					<ul class="flex flex-col space-y-4">
 						<li>
-							<p><b>CAMPO_TEXTO</b> = 'TEXTO' AND <b>CAMPO_NUMERICO</b> > 10</p>
-							<p class="text-gray-500">Juntando 2 filtros com operador lógico AND</p>
+							<p>
+								<b>CAMPO_TEXTO</b> = 'TEXTO' AND
+								<b>CAMPO_NUMERICO</b> > 10
+							</p>
+							<p class="text-gray-500">
+								Juntando 2 filtros com operador lógico AND
+							</p>
 						</li>
 						<li>
-							<p><b>CAMPO_TEXTO</b> = 'TEXTO' OR <b>CAMPO_NUMERICO</b> > 10</p>
-							<p class="text-gray-500">Juntando 2 filtros com operador lógico OR</p>
+							<p>
+								<b>CAMPO_TEXTO</b> = 'TEXTO' OR
+								<b>CAMPO_NUMERICO</b> > 10
+							</p>
+							<p class="text-gray-500">
+								Juntando 2 filtros com operador lógico OR
+							</p>
 						</li>
 					</ul>
 				</div>

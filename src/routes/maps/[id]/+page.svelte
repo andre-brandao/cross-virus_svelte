@@ -19,9 +19,12 @@
 	import { getCasosFromMapURL } from '$lib/utils_client'
 	import ModalEditGrafico from '$lib/ModalEditGrafico.svelte'
 	export let data: PageData
+
+	let { supabase } = data
+	$: ({ supabase } = data)
+
 	const map = data.map
 	console.log(map)
-	let query: ArcgisFilter[] = []
 
 	let mapConfig: MapWrapperParams = {
 		csv_url: map?.csv_url,
@@ -29,7 +32,8 @@
 			map?.long ?? -55.491977,
 			map?.lat ?? -10.836584,
 		],
-		charts: [],
+		charts:
+			map.graficos.map((g) => JSON.parse(g.json)) ?? [],
 		fieldNames: map?.fields,
 	}
 
@@ -41,7 +45,7 @@
 
 	$: console.log(mapConfig)
 
-	function pushNewChart(newChart: ChartFiltered) {
+	async function pushNewChart(newChart: ChartFiltered) {
 		console.log('pushing new chart', newChart)
 		mapConfig.charts.push({
 			id: Math.random().toString(),
@@ -50,7 +54,7 @@
 		mapConfig = mapConfig
 	}
 
-	function deleteChart(chart: ChartFiltered) {
+	async function deleteChart(chart: ChartFiltered) {
 		console.log('deleting chart', chart)
 		mapConfig.charts = mapConfig.charts.filter(
 			(c) => c.id !== chart.id,
@@ -79,14 +83,21 @@
 	{/if}
 
 	<div class="flex gap-3 mx-3">
-		<ModalEditGrafico
+		<!-- <ModalEditGrafico
 			on:createChart={(e) => {
 				const newGrafico = e.detail
 				pushNewChart(newGrafico)
 			}}
 			fields={map.fields}
 			isCreate={true}
-		/>
+		/> -->
+
+		<a
+			href="/maps/{map.id}/grafico"
+			class="group flex justify-center items-center text-center rounded-md p-2 transition ease-in-out bg-secondary text-white hover:text-black hover:bg-primary hover:shadow-md hover:shadow-primary px-5"
+		>
+			Criar Grafico
+		</a>
 
 		<Modal
 			config={{
@@ -103,7 +114,10 @@
 	bind:map_config={mapConfig}
 	on:deleteChart={(e) => {
 		const chartEventValue = e.detail
-
 		deleteChart(chartEventValue.chart)
 	}}
 />
+
+<pre>
+	{JSON.stringify(mapConfig, null, 2)}
+</pre>
